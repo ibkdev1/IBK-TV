@@ -146,7 +146,7 @@ app.get('/stream', async (req, res) => {
 app.get('/health', (_, res) => res.json({ status: 'ok', port: PORT }));
 
 // ── SPA fallback (serve index.html for any unmatched route) ───
-app.get('*', (_, res) => {
+app.get(/(.*)/, (_, res) => {
   const indexPath = path.join(distDir, 'index.html');
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);

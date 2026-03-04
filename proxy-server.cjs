@@ -72,21 +72,14 @@ function fetchWithRedirects(url, headers = {}, maxRedirects = 5) {
 
 // ── M3U8 URL rewriter ─────────────────────────────────────────
 function rewriteM3U8(content, originalUrl) {
-  const base = originalUrl.substring(0, originalUrl.lastIndexOf('/') + 1);
-
   return content.replace(/^(?!#)(\S+)$/gm, (match) => {
     if (!match.trim()) return match;
     let absolute;
-    if (match.startsWith('http://') || match.startsWith('https://')) {
-      absolute = match;
-    } else if (match.startsWith('//')) {
-      const parsed = new URL(originalUrl);
-      absolute = parsed.protocol + match;
-    } else if (match.startsWith('/')) {
-      const parsed = new URL(originalUrl);
-      absolute = `${parsed.protocol}//${parsed.host}${match}`;
-    } else {
-      absolute = base + match;
+    try {
+      // new URL() correctly resolves relative paths including ../
+      absolute = new URL(match, originalUrl).href;
+    } catch {
+      return match;
     }
     return `/stream?url=${encodeURIComponent(absolute)}`;
   });

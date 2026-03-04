@@ -22,6 +22,9 @@ export default function App() {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [search, setSearch] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(0);
+  // 'grid' = D-pad controls channel cards | 'cat' = D-pad controls category bar
+  const [zone, setZone] = useState<'grid' | 'cat'>('grid');
+  const [focusedCat, setFocusedCat] = useState(0);
   const [clock, setClock] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -45,17 +48,67 @@ export default function App() {
     const handleKey = (e: KeyboardEvent) => {
       if (selectedChannel) return;
       if (document.activeElement === searchRef.current) return;
+
+      if (zone === 'cat') {
+        switch (e.key) {
+          case 'ArrowRight':
+            e.preventDefault();
+            setFocusedCat((i) => Math.min(i + 1, categories.length - 1));
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            setFocusedCat((i) => Math.max(i - 1, 0));
+            break;
+          case 'Enter':
+            e.preventDefault();
+            setActiveCategory(categories[focusedCat]);
+            setZone('grid');
+            setFocusedIndex(0);
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            setZone('grid');
+            setFocusedIndex(0);
+            break;
+          case 'ArrowUp':
+            // already at top
+            break;
+        }
+        return;
+      }
+
+      // zone === 'grid'
       switch (e.key) {
-        case 'ArrowRight': setFocusedIndex((i) => Math.min(i + 1, filtered.length - 1)); break;
-        case 'ArrowLeft': setFocusedIndex((i) => Math.max(i - 1, 0)); break;
-        case 'ArrowDown': setFocusedIndex((i) => Math.min(i + cols, filtered.length - 1)); break;
-        case 'ArrowUp': setFocusedIndex((i) => Math.max(i - cols, 0)); break;
-        case 'Enter': if (filtered[focusedIndex]) setSelectedChannel(filtered[focusedIndex]); break;
+        case 'ArrowRight':
+          e.preventDefault();
+          setFocusedIndex((i) => Math.min(i + 1, filtered.length - 1));
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          setFocusedIndex((i) => Math.max(i - 1, 0));
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedIndex((i) => Math.min(i + cols, filtered.length - 1));
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          if (focusedIndex < cols) {
+            // First row → go up to category bar
+            setZone('cat');
+            setFocusedCat(categories.indexOf(activeCategory));
+          } else {
+            setFocusedIndex((i) => Math.max(i - cols, 0));
+          }
+          break;
+        case 'Enter':
+          if (filtered[focusedIndex]) setSelectedChannel(filtered[focusedIndex]);
+          break;
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [filtered, focusedIndex, selectedChannel]);
+  }, [filtered, focusedIndex, focusedCat, zone, selectedChannel, activeCategory]);
 
   useEffect(() => { setFocusedIndex(0); }, [activeCategory, search]);
 
@@ -87,11 +140,11 @@ export default function App() {
       </header>
 
       <nav className="categories">
-        {categories.map((cat) => (
+        {categories.map((cat, idx) => (
           <button
             key={cat}
-            className={`cat-btn ${activeCategory === cat ? 'active' : ''}`}
-            onClick={() => setActiveCategory(cat)}
+            className={`cat-btn ${activeCategory === cat ? 'active' : ''} ${zone === 'cat' && focusedCat === idx ? 'cat-focused' : ''}`}
+            onClick={() => { setActiveCategory(cat); setZone('grid'); }}
           >
             {categoryIcons[cat]} {cat}
           </button>
@@ -101,6 +154,7 @@ export default function App() {
       <div className="count-bar">
         <span>{filtered.length} channel{filtered.length !== 1 ? 's' : ''}</span>
         {search && <span className="search-label"> · results for "<em>{search}</em>"</span>}
+        {zone === 'cat' && <span className="search-label"> · <em>↑↓ category mode — press Enter to select</em></span>}
       </div>
 
       <main className="grid">
@@ -108,9 +162,9 @@ export default function App() {
         {filtered.map((ch, idx) => (
           <div
             key={ch.id}
-            className={`channel-card ${idx === focusedIndex ? 'focused' : ''}`}
+            className={`channel-card ${idx === focusedIndex && zone === 'grid' ? 'focused' : ''}`}
             onClick={() => setSelectedChannel(ch)}
-            onMouseEnter={() => setFocusedIndex(idx)}
+            onMouseEnter={() => { setFocusedIndex(idx); setZone('grid'); }}
             tabIndex={0}
           >
             <div className="live-badge">● LIVE</div>
@@ -135,7 +189,7 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        IBK-TV · Free Live Television · Use ↑↓←→ to navigate · Enter to watch
+        IBK-TV · ↑ from top row to switch category · ←→ navigate · Enter to watch
       </footer>
 
       <Player channel={selectedChannel} onClose={() => setSelectedChannel(null)} />

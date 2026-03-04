@@ -1,0 +1,7 @@
+com.ibktv.app-pngs-0 /Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/build/generated/res/pngs/debug
+com.ibktv.app-resValues-1 /Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/build/generated/res/resValues/debug
+com.ibktv.app-packageDebugResources-2 /Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.ibktv.app-packageDebugResources-3 /Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.ibktv.app-debug-4 /Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/build/intermediates/merged_res/debug/mergeDebugResources
+com.ibktv.app-debug-5 /Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/debug/res
+com.ibktv.app-main-6 /Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/res

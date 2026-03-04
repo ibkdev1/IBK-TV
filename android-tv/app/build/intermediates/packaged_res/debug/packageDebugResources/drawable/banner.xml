@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV app banner: shown in the Android TV / Fire TV leanback launcher (320x180dp) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Dark background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0d0d0f" />
+        </shape>
+    </item>
+    <!-- Red accent bar at bottom -->
+    <item android:top="160dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#E50914" />
+        </shape>
+    </item>
+    <!-- Red left border -->
+    <item android:right="300dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#E50914" />
+        </shape>
+    </item>
+</layer-list>

@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
 
     // ⚠ UPDATE THIS URL after you deploy to Railway!
     // It will look like: https://ibk-tv-production.up.railway.app
-    private static final String APP_URL = "https://YOUR-APP.up.railway.app";
+    private static final String APP_URL = "https://ibk-tv-production.up.railway.app";
 
     private WebView webView;
 

@@ -1,0 +1,77 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.ibktv.app"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:4:5-67
+11-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:5:5-79
+12-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:5:22-76
+13
+14    <!-- TV: touchscreen not required, D-pad used instead -->
+15    <uses-feature
+15-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:8:5-90
+16        android:name="android.hardware.touchscreen"
+16-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:8:19-62
+17        android:required="false" />
+17-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:8:63-87
+18    <uses-feature
+18-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:9:5-87
+19        android:name="android.software.leanback"
+19-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:9:19-59
+20        android:required="false" />
+20-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:9:60-84
+21
+22    <application
+22-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:11:5-34:19
+23        android:allowBackup="false"
+23-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:12:9-36
+24        android:banner="@drawable/banner"
+24-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:13:9-42
+25        android:debuggable="true"
+26        android:extractNativeLibs="true"
+27        android:hardwareAccelerated="true"
+27-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:14:9-43
+28        android:icon="@mipmap/ic_launcher"
+28-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:15:9-43
+29        android:label="@string/app_name"
+29-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:16:9-41
+30        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+30-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:17:9-67
+31        <activity
+31-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:19:9-32:20
+32            android:name="com.ibktv.app.MainActivity"
+32-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:20:13-41
+33            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|uiMode"
+33-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:21:13-103
+34            android:exported="true"
+34-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:22:13-36
+35            android:launchMode="singleTop"
+35-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:23:13-43
+36            android:screenOrientation="landscape" >
+36-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:24:13-50
+37            <intent-filter>
+37-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:25:13-31:29
+38                <action android:name="android.intent.action.MAIN" />
+38-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:26:17-69
+38-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:26:25-66
+39                <!-- Standard Android launcher -->
+40                <category android:name="android.intent.category.LAUNCHER" />
+40-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:28:17-77
+40-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:28:27-74
+41                <!-- Android TV / Fire TV leanback launcher -->
+42                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+42-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:30:17-86
+42-->/Users/ibrehimakeita/Desktop/IBK-TV/android-tv/app/src/main/AndroidManifest.xml:30:27-83
+43            </intent-filter>
+44        </activity>
+45    </application>
+46
+47</manifest>

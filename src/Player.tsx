@@ -52,16 +52,16 @@ export default function Player({ channel, onClose }: PlayerProps) {
     if (Hls.isSupported()) {
       const hls = new Hls({
         lowLatencyMode: false,
-        maxBufferLength: 60,
-        maxMaxBufferLength: 120,
-        highBufferWatchdogPeriod: 5,
-        fragLoadingTimeOut: 30000,
-        manifestLoadingTimeOut: 30000,
-        levelLoadingTimeOut: 30000,
-        fragLoadingMaxRetry: 6,
-        manifestLoadingMaxRetry: 4,
-        levelLoadingMaxRetry: 4,
-        fragLoadingRetryDelay: 1000,
+        maxBufferLength: 8,
+        maxMaxBufferLength: 16,
+        highBufferWatchdogPeriod: 3,
+        fragLoadingTimeOut: 10000,
+        manifestLoadingTimeOut: 10000,
+        levelLoadingTimeOut: 10000,
+        fragLoadingMaxRetry: 3,
+        manifestLoadingMaxRetry: 2,
+        levelLoadingMaxRetry: 2,
+        fragLoadingRetryDelay: 500,
         startFragPrefetch: true,
       });
       hlsRef.current = hls;

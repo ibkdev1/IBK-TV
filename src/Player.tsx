@@ -31,6 +31,13 @@ export default function Player({ channel, onClose }: PlayerProps) {
     return () => { if (hideTimer.current) clearTimeout(hideTimer.current); };
   }, [status, bumpBar]);
 
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+
+  const enterIOSFullscreen = useCallback(() => {
+    const el = videoRef.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+    if (el?.webkitEnterFullscreen) el.webkitEnterFullscreen();
+  }, []);
+
   const startStream = useCallback(() => {
     if (!channel || !videoRef.current) return;
     setStatus('loading');
@@ -60,7 +67,12 @@ export default function Player({ channel, onClose }: PlayerProps) {
       hlsRef.current = hls;
       hls.loadSource(src);
       hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play().catch(() => {}); setStatus('playing'); });
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play().then(() => {
+          if (isIOS) enterIOSFullscreen();
+        }).catch(() => {});
+        setStatus('playing');
+      });
       hls.on(Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
           setErrMsg(`${data.type}: ${data.details}`);
@@ -70,14 +82,20 @@ export default function Player({ channel, onClose }: PlayerProps) {
         }
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native HLS (iOS Safari) — video goes fullscreen automatically via webkitEnterFullscreen
       video.src = src;
-      video.onloadedmetadata = () => { video.play().catch(() => {}); setStatus('playing'); };
+      video.onloadedmetadata = () => {
+        video.play().then(() => {
+          if (isIOS) enterIOSFullscreen();
+        }).catch(() => {});
+        setStatus('playing');
+      };
       video.onerror = () => { setStatus('error'); setErrMsg('Stream unavailable'); };
     } else {
       setStatus('error');
       setErrMsg('HLS not supported in this browser');
     }
-  }, [channel, retryKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [channel, retryKey, isIOS, enterIOSFullscreen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     startStream();
@@ -157,7 +175,7 @@ export default function Player({ channel, onClose }: PlayerProps) {
         className="fs-video"
         controls
         autoPlay
-        playsInline
+        playsInline={!isIOS}
         style={{ display: status === 'error' ? 'none' : 'block' }}
       />
 

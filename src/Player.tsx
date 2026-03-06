@@ -11,22 +11,31 @@ interface PlayerProps {
 export default function Player({ channel, onClose }: PlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [status, setStatus] = useState<'loading' | 'playing' | 'error'>('loading');
   const [errMsg, setErrMsg] = useState('');
-  const [retryKey, setRetryKey] = useState(0); // incrementing forces stream restart
+  const [retryKey, setRetryKey] = useState(0);
+  const [showBar, setShowBar] = useState(true);
+
+  // Show the top bar and restart the 4-second hide timer
+  const bumpBar = useCallback(() => {
+    setShowBar(true);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => setShowBar(false), 4000);
+  }, []);
+
+  // Start hiding once playing begins
+  useEffect(() => {
+    if (status === 'playing') bumpBar();
+    return () => { if (hideTimer.current) clearTimeout(hideTimer.current); };
+  }, [status, bumpBar]);
 
   const startStream = useCallback(() => {
     if (!channel || !videoRef.current) return;
-
     setStatus('loading');
     setErrMsg('');
 
-    // Destroy any existing HLS instance
-    if (hlsRef.current) {
-      hlsRef.current.destroy();
-      hlsRef.current = null;
-    }
-
+    if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
     const video = videoRef.current;
     video.src = '';
 
@@ -35,28 +44,25 @@ export default function Player({ channel, onClose }: PlayerProps) {
     if (Hls.isSupported()) {
       const hls = new Hls({
         lowLatencyMode: false,
-        maxBufferLength: 20,
-        maxMaxBufferLength: 40,
+        maxBufferLength: 60,
+        maxMaxBufferLength: 120,
+        highBufferWatchdogPeriod: 5,
         fragLoadingTimeOut: 30000,
         manifestLoadingTimeOut: 30000,
         levelLoadingTimeOut: 30000,
-        fragLoadingMaxRetry: 3,
-        manifestLoadingMaxRetry: 3,
-        levelLoadingMaxRetry: 3,
+        fragLoadingMaxRetry: 6,
+        manifestLoadingMaxRetry: 4,
+        levelLoadingMaxRetry: 4,
+        fragLoadingRetryDelay: 1000,
+        startFragPrefetch: true,
       });
       hlsRef.current = hls;
       hls.loadSource(src);
       hls.attachMedia(video);
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
-        setStatus('playing');
-      });
-
+      hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play().catch(() => {}); setStatus('playing'); });
       hls.on(Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
-          const msg = `${data.type}: ${data.details}`;
-          setErrMsg(msg);
+          setErrMsg(`${data.type}: ${data.details}`);
           setStatus('error');
           hls.destroy();
           hlsRef.current = null;
@@ -72,84 +78,90 @@ export default function Player({ channel, onClose }: PlayerProps) {
     }
   }, [channel, retryKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Start stream when channel changes or retry is triggered
   useEffect(() => {
     startStream();
-    return () => {
-      hlsRef.current?.destroy();
-      hlsRef.current = null;
-    };
+    return () => { hlsRef.current?.destroy(); hlsRef.current = null; };
   }, [startStream]);
 
-  // Keyboard: Escape to close
+  // Escape closes on desktop; TV remote Back is handled via popstate in App.tsx
+  // Any keypress bumps the info bar
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === 'Backspace') onClose();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      } else {
+        bumpBar();
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [onClose, bumpBar]);
 
   if (!channel) return null;
 
+  const alwaysShow = status !== 'playing';
+
   return (
-    <div className="player-overlay" onClick={onClose}>
-      <div className="player-container" onClick={(e) => e.stopPropagation()}>
+    <div className="fs-player" onMouseMove={bumpBar} onClick={bumpBar}>
 
-        <div className="player-header">
-          <img
-            src={channel.logo}
-            alt={channel.name}
-            className="player-logo"
-            onError={(e) => (e.currentTarget.style.display = 'none')}
-          />
-          <div className="player-info">
-            <h2>{channel.name}</h2>
-            <span>{channel.country} · {channel.language}</span>
-          </div>
-          <div className="player-live-badge">● LIVE</div>
-          <button className="close-btn" onClick={onClose} title="Close (Esc)">✕</button>
+      {/* Top info bar — auto-hides during playback */}
+      <div className={`fs-topbar ${showBar || alwaysShow ? 'fs-topbar--visible' : ''}`}>
+        <div className="fs-back">‹ Back</div>
+        <img
+          src={channel.logo}
+          alt={channel.name}
+          className="fs-ch-logo"
+          onError={(e) => (e.currentTarget.style.display = 'none')}
+        />
+        <div className="fs-ch-info">
+          <div className="fs-ch-name">{channel.name}</div>
+          <div className="fs-ch-sub">{channel.country} · {channel.language}</div>
         </div>
-
-        <div className="video-wrapper">
-          {status === 'loading' && (
-            <div className="overlay-message">
-              <div className="spinner" />
-              <p>Connecting to stream...</p>
-              <small>{channel.name} · {channel.country}</small>
-            </div>
-          )}
-
-          {status === 'error' && (
-            <div className="overlay-message error">
-              <p>⚠ Stream unavailable</p>
-              <small>
-                {errMsg.includes('manifestLoad')
-                  ? 'Could not connect to the stream server. It may be offline or geo-restricted.'
-                  : errMsg.includes('levelLoad')
-                  ? 'Stream loaded but segments failed. Check your connection.'
-                  : errMsg || 'This channel may be temporarily offline.'}
-              </small>
-              <button
-                className="retry-btn"
-                onClick={() => setRetryKey((k) => k + 1)}
-              >
-                ↺ Retry
-              </button>
-            </div>
-          )}
-
-          <video
-            ref={videoRef}
-            className="video-player"
-            controls
-            autoPlay
-            playsInline
-            style={{ display: status === 'error' ? 'none' : 'block' }}
-          />
-        </div>
-
+        <div className="fs-live-badge">● LIVE</div>
+        <div className="fs-brand"><span className="wm-ibk">IBK</span><span className="wm-tv">TV</span></div>
       </div>
+
+      {/* Persistent IBK TV bug — always visible, survives native fullscreen */}
+      <div className="ibk-bug" aria-hidden="true">
+        <span className="ibk-bug-ibk">IBK</span><span className="ibk-bug-tv">TV</span>
+      </div>
+
+      {/* Video */}
+      <video
+        ref={videoRef}
+        className="fs-video"
+        controls
+        autoPlay
+        playsInline
+        style={{ display: status === 'error' ? 'none' : 'block' }}
+      />
+
+      {/* Loading */}
+      {status === 'loading' && (
+        <div className="fs-msg">
+          <div className="spinner" />
+          <p>Connecting to stream…</p>
+          <small>{channel.name} · {channel.country}</small>
+        </div>
+      )}
+
+      {/* Error */}
+      {status === 'error' && (
+        <div className="fs-msg error">
+          <p>⚠ Stream unavailable</p>
+          <small>
+            {errMsg.includes('manifestLoad')
+              ? 'Could not connect to the stream. It may be offline or geo-restricted.'
+              : errMsg.includes('levelLoad')
+              ? 'Stream loaded but segments failed. Check your connection.'
+              : errMsg || 'This channel may be temporarily offline.'}
+          </small>
+          <button className="retry-btn" onClick={() => setRetryKey((k) => k + 1)}>↺ Retry</button>
+          <button className="retry-btn back-btn" onClick={onClose}>‹ Go Back</button>
+        </div>
+      )}
+
     </div>
   );
 }

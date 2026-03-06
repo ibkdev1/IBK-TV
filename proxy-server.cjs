@@ -72,17 +72,28 @@ function fetchWithRedirects(url, headers = {}, maxRedirects = 5) {
 
 // ── M3U8 URL rewriter ─────────────────────────────────────────
 function rewriteM3U8(content, originalUrl) {
-  return content.replace(/^(?!#)(\S+)$/gm, (match) => {
+  // Rewrite bare URL lines (segments, sub-playlists)
+  let out = content.replace(/^(?!#)(\S+)$/gm, (match) => {
     if (!match.trim()) return match;
     let absolute;
     try {
-      // new URL() correctly resolves relative paths including ../
       absolute = new URL(match, originalUrl).href;
     } catch {
       return match;
     }
     return `/stream?url=${encodeURIComponent(absolute)}`;
   });
+  // Rewrite URI="..." attributes (AES-128 keys, EXT-X-MAP init segments, etc.)
+  out = out.replace(/URI="([^"]+)"/g, (match, uri) => {
+    let absolute;
+    try {
+      absolute = new URL(uri, originalUrl).href;
+    } catch {
+      return match;
+    }
+    return `URI="/stream?url=${encodeURIComponent(absolute)}"`;
+  });
+  return out;
 }
 
 // ── Proxy endpoint ────────────────────────────────────────────
@@ -115,6 +126,11 @@ app.get('/stream', async (req, res) => {
       proxyRes.setEncoding('utf8');
       proxyRes.on('data', (chunk) => (body += chunk));
       proxyRes.on('end', () => {
+        // If CDN soft-blocked us (returned HTML/JSON instead of M3U8), return a real error
+        if (!body.trim().startsWith('#EXTM3U')) {
+          console.error(`[proxy] Non-M3U8 response for ${targetUrl}: ${body.slice(0, 120)}`);
+          return res.status(502).send('Upstream returned non-M3U8 content (blocked or unavailable)');
+        }
         const rewritten = rewriteM3U8(body, finalUrl);
         res.setHeader('Content-Type', 'application/vnd.apple.mpegurl');
         res.setHeader('Cache-Control', 'no-cache, no-store');

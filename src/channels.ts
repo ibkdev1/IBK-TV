@@ -16,7 +16,7 @@ export function proxyUrl(rawUrl: string, referer?: string): string {
 }
 
 export const categories = [
-  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'South Africa', 'Congo', 'Zambia', 'Animals', 'Kids', 'Sports',
+  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'South Africa', 'Congo', 'Zambia', 'Animals', 'Kids', 'Sports', 'Movies',
 ];
 
 export const channels: Channel[] = [
@@ -842,6 +842,118 @@ export const channels: Channel[] = [
     streamUrl: 'https://goaltv-1-it.samsung.wurl.tv/playlist.m3u8',
     category: 'Sports',
     country: 'International',
+    language: 'English',
+  },
+
+  // ══════════════════════════════════════════════
+  //  🎬  MOVIES
+  // ══════════════════════════════════════════════
+  {
+    id: 'comet-tv',
+    name: 'Comet TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://comet-tv-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'charge-tv',
+    name: 'Charge! (Action Movies)',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://charge-tv-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'shout-factory',
+    name: 'Shout! Factory TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://shout-factory-tv-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'horror-channel',
+    name: 'Horror Channel',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://horror-channel-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'westerns-channel',
+    name: 'Westerns Channel',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://westerns-channel-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'hallmark-movies',
+    name: 'Hallmark Movies',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://hallmark-movies-now-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'lifetime-movies',
+    name: 'Lifetime Movies',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://lifetime-movie-club-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'amc',
+    name: 'AMC',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://amc-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'tcm',
+    name: 'Turner Classic Movies',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://tcm-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'film-rise',
+    name: 'FilmRise Movies',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://filmrise-movies-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'popcornflix',
+    name: 'Popcornflix',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://popcornflix-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
+    language: 'English',
+  },
+  {
+    id: 'dove-channel',
+    name: 'Dove Channel (Family)',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
+    streamUrl: 'https://dove-channel-1-it.samsung.wurl.tv/playlist.m3u8',
+    category: 'Movies',
+    country: 'United States',
     language: 'English',
   },
 ];

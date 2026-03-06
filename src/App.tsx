@@ -19,6 +19,7 @@ const categoryIcons: Record<string, string> = {
   Animals: '🦁',
   Kids: '🧒',
   Sports: '⚽',
+  Movies: '🎬',
   'South Africa': '🇿🇦',
   Congo: '🇨🇩',
   Zambia: '🇿🇲',

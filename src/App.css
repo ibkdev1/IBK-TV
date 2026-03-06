@@ -452,7 +452,25 @@
   border-radius: 20px;
   white-space: nowrap;
   flex-shrink: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+.fs-back:active { background: rgba(255,255,255,0.15); }
+
+.fs-fullscreen-btn {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: rgba(255,255,255,0.85);
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.fs-fullscreen-btn:active { background: rgba(255,255,255,0.15); }
 
 .fs-ch-logo {
   height: 40px;

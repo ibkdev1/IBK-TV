@@ -16,6 +16,7 @@ export default function Player({ channel, onClose }: PlayerProps) {
   const [errMsg, setErrMsg] = useState('');
   const [retryKey, setRetryKey] = useState(0);
   const [showBar, setShowBar] = useState(true);
+  const [isFs, setIsFs] = useState(!!document.fullscreenElement);
 
   // Show the top bar and restart the 4-second hide timer
   const bumpBar = useCallback(() => {
@@ -83,6 +84,26 @@ export default function Player({ channel, onClose }: PlayerProps) {
     return () => { hlsRef.current?.destroy(); hlsRef.current = null; };
   }, [startStream]);
 
+  const toggleFullscreen = useCallback(() => {
+    const el = videoRef.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+    if (!el) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (el.webkitEnterFullscreen) {
+      // iOS Safari: fullscreen on the video element itself
+      el.webkitEnterFullscreen();
+    } else {
+      el.requestFullscreen?.();
+    }
+  }, []);
+
+  // Track fullscreen state for the button icon
+  useEffect(() => {
+    const onChange = () => setIsFs(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+
   // Escape closes on desktop; TV remote Back is handled via popstate in App.tsx
   // Any keypress bumps the info bar
   useEffect(() => {
@@ -103,11 +124,11 @@ export default function Player({ channel, onClose }: PlayerProps) {
   const alwaysShow = status !== 'playing';
 
   return (
-    <div className="fs-player" onMouseMove={bumpBar} onClick={bumpBar}>
+    <div className="fs-player" onMouseMove={bumpBar} onClick={bumpBar} onTouchStart={bumpBar}>
 
       {/* Top info bar — auto-hides during playback */}
       <div className={`fs-topbar ${showBar || alwaysShow ? 'fs-topbar--visible' : ''}`}>
-        <div className="fs-back">‹ Back</div>
+        <button className="fs-back" onClick={(e) => { e.stopPropagation(); onClose(); }}>‹ Back</button>
         <img
           src={channel.logo}
           alt={channel.name}
@@ -119,6 +140,9 @@ export default function Player({ channel, onClose }: PlayerProps) {
           <div className="fs-ch-sub">{channel.country} · {channel.language}</div>
         </div>
         <div className="fs-live-badge">● LIVE</div>
+        <button className="fs-fullscreen-btn" onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} aria-label="Toggle fullscreen">
+          {isFs ? '⤡' : '⤢'}
+        </button>
         <div className="fs-brand"><span className="wm-ibk">IBK</span><span className="wm-tv">TV</span></div>
       </div>
 

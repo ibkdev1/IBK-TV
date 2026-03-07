@@ -475,6 +475,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 .fs-fullscreen-btn:active { background: rgba(255,255,255,0.15); }
+.fs-report-btn { font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.75); background: transparent; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 0.2rem 0.6rem; cursor: pointer; flex-shrink: 0; white-space: nowrap; }
+.fs-report-btn:hover { border-color: #f87; color: #f87; }
+.fs-report-btn--done { color: #4f4 !important; border-color: #4f4 !important; cursor: default; }
 
 .fs-ch-logo {
   height: 40px;
@@ -685,6 +688,15 @@
   letter-spacing: 0.3px;
   text-shadow: 0 1px 8px rgba(0,0,0,0.8);
 }
+
+/* ── RECENTLY WATCHED ────────────────────────────────────────── */
+.recent-wrap { padding: 0.5rem 1.5rem 0; }
+.recent-title { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+.recent-row { display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
+.recent-row::-webkit-scrollbar { display: none; }
+.recent-chip { display: flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 0.3rem 0.8rem 0.3rem 0.4rem; cursor: pointer; white-space: nowrap; font-size: 0.8rem; color: #fff; transition: background 0.15s; flex-shrink: 0; }
+.recent-chip:hover { background: rgba(255,255,255,0.18); }
+.recent-logo { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; }
 
 /* ── RESPONSIVE ──────────────────────────────────────────────── */
 @media (max-width: 640px) {

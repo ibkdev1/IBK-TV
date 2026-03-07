@@ -18,11 +18,7 @@ const categoryIcons: Record<string, string> = {
   News: '📰',
   Animals: '🦁',
   Kids: '🧒',
-  Sports: '⚽',
-  Movies: '🎬',
-  'South Africa': '🇿🇦',
   Congo: '🇨🇩',
-  Zambia: '🇿🇲',
 };
 
 function loadFavorites(): Set<string> {
@@ -32,6 +28,25 @@ function loadFavorites(): Set<string> {
   } catch {
     return new Set();
   }
+}
+
+function loadRecent(): Channel[] {
+  try {
+    const saved = localStorage.getItem('ibktv-recent');
+    const ids: string[] = saved ? JSON.parse(saved) : [];
+    return ids.map(id => channels.find(c => c.id === id)).filter(Boolean) as Channel[];
+  } catch {
+    return [];
+  }
+}
+
+function saveRecent(channel: Channel) {
+  try {
+    const saved = localStorage.getItem('ibktv-recent');
+    const ids: string[] = saved ? JSON.parse(saved) : [];
+    const next = [channel.id, ...ids.filter(id => id !== channel.id)].slice(0, 10);
+    localStorage.setItem('ibktv-recent', JSON.stringify(next));
+  } catch { /* ignore */ }
 }
 
 function loadCatOrder(): string[] {
@@ -57,6 +72,7 @@ export default function App() {
   const [focusedCat, setFocusedCat] = useState(0);
   const [clock, setClock] = useState('');
   const [favorites, setFavorites] = useState<Set<string>>(loadFavorites);
+  const [recent, setRecent] = useState<Channel[]>(loadRecent);
   const [catOrder, setCatOrder] = useState<string[]>(loadCatOrder);
   const [catMoving, setCatMoving] = useState(false);
   const [showPrayer, setShowPrayer] = useState(false);
@@ -242,7 +258,11 @@ export default function App() {
           }
           break;
         case 'Enter':
-          if (filtered[focusedIndex]) setSelectedChannel(filtered[focusedIndex]);
+          if (filtered[focusedIndex]) {
+            saveRecent(filtered[focusedIndex]);
+            setRecent(loadRecent());
+            setSelectedChannel(filtered[focusedIndex]);
+          }
           break;
         case 'f':
         case 'F':
@@ -358,6 +378,20 @@ export default function App() {
         {zone === 'cat' && catMoving && <span className="search-label"> · <em>←→ to move · Enter/M to confirm</em></span>}
       </div>
 
+      {recent.length > 0 && activeCategory === 'All' && !search && (
+        <div className="recent-wrap">
+          <div className="recent-title">🕐 Recently Watched</div>
+          <div className="recent-row">
+            {recent.map(ch => (
+              <div key={ch.id} className="recent-chip" onClick={() => { saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }}>
+                <img src={ch.logo} alt={ch.name} className="recent-logo" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span>{ch.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <main className="grid" ref={gridRef}>
         {filtered.length === 0 && (
           <div className="empty">
@@ -368,7 +402,7 @@ export default function App() {
           <div
             key={ch.id}
             className={`channel-card ${idx === focusedIndex && zone === 'grid' ? 'focused' : ''}`}
-            onClick={() => setSelectedChannel(ch)}
+            onClick={() => { saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }}
             onMouseEnter={() => { setFocusedIndex(idx); setZone('grid'); }}
             tabIndex={0}
           >

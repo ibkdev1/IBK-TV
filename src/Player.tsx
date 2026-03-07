@@ -17,6 +17,9 @@ export default function Player({ channel, onClose }: PlayerProps) {
   const [retryKey, setRetryKey] = useState(0);
   const [showBar, setShowBar] = useState(true);
   const [isFs, setIsFs] = useState(!!document.fullscreenElement);
+  const [reported, setReported] = useState(false);
+
+  useEffect(() => { setReported(false); }, [channel]);
 
   // Show the top bar and restart the 4-second hide timer
   const bumpBar = useCallback(() => {
@@ -158,6 +161,23 @@ export default function Player({ channel, onClose }: PlayerProps) {
           <div className="fs-ch-sub">{channel.country} · {channel.language}</div>
         </div>
         <div className="fs-live-badge">● LIVE</div>
+        <button
+          className={`fs-report-btn ${reported ? 'fs-report-btn--done' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!reported && channel) {
+              try {
+                const broken: string[] = JSON.parse(localStorage.getItem('ibktv-broken') || '[]');
+                if (!broken.includes(channel.id)) broken.push(channel.id);
+                localStorage.setItem('ibktv-broken', JSON.stringify(broken));
+              } catch { /* ignore */ }
+              setReported(true);
+            }
+          }}
+          title="Report this channel as broken"
+        >
+          {reported ? '✓ Reported' : '⚑ Broken?'}
+        </button>
         <button className="fs-fullscreen-btn" onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} aria-label="Toggle fullscreen">
           {isFs ? '⤡' : '⤢'}
         </button>

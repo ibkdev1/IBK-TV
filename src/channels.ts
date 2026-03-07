@@ -16,7 +16,7 @@ export function proxyUrl(rawUrl: string, referer?: string): string {
 }
 
 export const categories = [
-  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'South Africa', 'Congo', 'Zambia', 'Animals', 'Kids', 'Sports', 'Movies',
+  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Animals', 'Kids',
 ];
 
 export const channels: Channel[] = [
@@ -90,7 +90,7 @@ export const channels: Channel[] = [
   {
     id: 'tbd-tv',
     name: 'TBD TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ion_television_logo.svg/120px-Ion_television_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/C-SPAN_logo.svg/60px-C-SPAN_logo.svg.png',
     streamUrl: 'https://fast-channels.sinclairstoryline.com/TBD/index.m3u8',
     category: 'US',
     country: 'United States',
@@ -148,7 +148,7 @@ export const channels: Channel[] = [
   {
     id: 'people-are-awesome',
     name: 'People Are Awesome',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/60px-NASA_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Animal_Planet_Logo_2018.svg/60px-Animal_Planet_Logo_2018.svg.png',
     streamUrl: 'https://jukin-peopleareawesome-2-it.samsung.wurl.tv/playlist.m3u8',
     category: 'Animals',
     country: 'International',
@@ -167,72 +167,7 @@ export const channels: Channel[] = [
     country: 'United States',
     language: 'English',
   },
-  {
-    id: 'kartoon-channel',
-    name: 'Kartoon Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PBS_Kids_Logo_2013.svg/60px-PBS_Kids_Logo_2013.svg.png',
-    streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01426-kartoonstudi-kartoonchannel-stirr/playlist.m3u8',
-    category: 'Kids',
-    country: 'United States',
-    language: 'English',
-  },
-  // ══════════════════════════════════════════════
-  //  ⚽  SPORTS
-  // ══════════════════════════════════════════════
-  {
-    id: 'cbs-sports-hq',
-    name: 'CBS Sports HQ',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/CBS_News_logo_%282022%29.svg/120px-CBS_News_logo_%282022%29.svg.png',
-    streamUrl: 'https://cbsn-us.cbsnews.com/stream/cbssportshq/master.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'fight-network',
-    name: 'Fight Network',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Fight_Network_logo.svg/120px-Fight_Network_logo.svg.png',
-    streamUrl: 'https://fightnetwork-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'International',
-    language: 'English',
-  },
-  {
-    id: 'outside-tv',
-    name: 'Outside TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Outdoor_Channel_logo.svg/120px-Outdoor_Channel_logo.svg.png',
-    streamUrl: 'https://outside-tv-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'motortrend',
-    name: 'MotorTrend',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://motortrend-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'tennis-channel',
-    name: 'Tennis Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://tennis-channel-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'eurosport',
-    name: 'Eurosport',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Eurosport_logo_2015.svg/120px-Eurosport_logo_2015.svg.png',
-    streamUrl: 'https://eurosport-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'Europe',
-    language: 'English',
-  },
+
   // ══════════════════════════════════════════════
   //  🇲🇱  MALI
   // ══════════════════════════════════════════════
@@ -266,7 +201,7 @@ export const channels: Channel[] = [
   {
     id: 'd3tv',
     name: 'D3 TV',
-    logo: 'https://yt3.googleusercontent.com/ytc/AIdro_m_dummy/photo.jpg',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'https://live20.bozztv.com/akamaissh101/ssh101/d3tvnet/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
@@ -620,47 +555,7 @@ export const channels: Channel[] = [
   },
 
   // ══════════════════════════════════════════════
-  //  🇿🇦  SOUTH AFRICA
-  // ══════════════════════════════════════════════
-  {
-    id: 'sabc1',
-    name: 'SABC 1',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/SABC1_logo.svg/120px-SABC1_logo.svg.png',
-    streamUrl: 'https://livesabc.akamaized.net/sabc1/smil:sabc1.smil/playlist.m3u8',
-    category: 'South Africa',
-    country: 'South Africa',
-    language: 'English/Zulu',
-  },
-  {
-    id: 'sabc2',
-    name: 'SABC 2',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/SABC2_logo.svg/120px-SABC2_logo.svg.png',
-    streamUrl: 'https://livesabc.akamaized.net/sabc2/smil:sabc2.smil/playlist.m3u8',
-    category: 'South Africa',
-    country: 'South Africa',
-    language: 'Afrikaans/English',
-  },
-  {
-    id: 'sabc-news',
-    name: 'SABC News 24',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/SABC_News_logo.svg/120px-SABC_News_logo.svg.png',
-    streamUrl: 'https://livesabc.akamaized.net/sabcnews/smil:sabcnews.smil/playlist.m3u8',
-    category: 'South Africa',
-    country: 'South Africa',
-    language: 'English',
-  },
-  {
-    id: 'dstv-403',
-    name: 'eNCA',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/ENews_channel_logo.png/120px-ENews_channel_logo.png',
-    streamUrl: 'https://d2nkzebvuczxk4.cloudfront.net/enews/enews.isml/manifest(format=m3u8-aapl-v3,audioonly=false).m3u8',
-    category: 'South Africa',
-    country: 'South Africa',
-    language: 'English',
-  },
-
-  // ══════════════════════════════════════════════
-  //  🇨🇩  CONGO (DRC + Brazzaville)
+  //  🇨🇩  CONGO
   // ══════════════════════════════════════════════
   {
     id: 'rtnc',
@@ -672,231 +567,12 @@ export const channels: Channel[] = [
     language: 'French',
   },
   {
-    id: 'digital-congo',
-    name: 'Digital Congo',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Flag_of_the_Democratic_Republic_of_the_Congo.svg/60px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png',
-    streamUrl: 'http://69.64.57.208/digitalcongo/playlist.m3u8',
-    category: 'Congo',
-    country: 'Congo DRC',
-    language: 'French',
-  },
-  {
-    id: 'congo-b-rtv',
-    name: 'TELE CONGO',
+    id: 'tele-congo',
+    name: 'Télé Congo',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_the_Republic_of_the_Congo.svg/60px-Flag_of_the_Republic_of_the_Congo.svg.png',
     streamUrl: 'http://69.64.57.208/telecongo/playlist.m3u8',
     category: 'Congo',
     country: 'Congo Brazzaville',
     language: 'French',
-  },
-
-  // ══════════════════════════════════════════════
-  //  🇿🇲  ZAMBIA
-  // ══════════════════════════════════════════════
-  {
-    id: 'znbc',
-    name: 'ZNBC',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/60px-Flag_of_Zambia.svg.png',
-    streamUrl: 'https://livezambia.akamaized.net/znbc/smil:znbc.smil/playlist.m3u8',
-    category: 'Zambia',
-    country: 'Zambia',
-    language: 'English',
-  },
-  {
-    id: 'muvi-tv',
-    name: 'Muvi TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Zambia.svg/60px-Flag_of_Zambia.svg.png',
-    streamUrl: 'https://live20.bozztv.com/akamaissh101/ssh101/muvitv/playlist.m3u8',
-    category: 'Zambia',
-    country: 'Zambia',
-    language: 'English',
-  },
-
-  // ══════════════════════════════════════════════
-  //  ⚽  MORE SPORTS
-  // ══════════════════════════════════════════════
-  {
-    id: 'nfl-channel',
-    name: 'NFL Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/120px-National_Football_League_logo.svg.png',
-    streamUrl: 'https://nfl-network-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'nba-tv',
-    name: 'NBA TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/03/National_Basketball_Association_logo.svg/120px-National_Basketball_Association_logo.svg.png',
-    streamUrl: 'https://nba-tv-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'mlb-network',
-    name: 'MLB Network',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a6/Major_League_Baseball_logo.svg/120px-Major_League_Baseball_logo.svg.png',
-    streamUrl: 'https://mlb-network-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'golf-channel',
-    name: 'Golf Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://golf-channel-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'stadium',
-    name: 'Stadium (College Sports)',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Stadium_Sports_Network_Logo.svg/120px-Stadium_Sports_Network_Logo.svg.png',
-    streamUrl: 'https://stadium-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'mavtv',
-    name: 'MAVTV Motorsports',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://mavtv-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'olympic-channel',
-    name: 'Olympic Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://olympic-channel-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'International',
-    language: 'English',
-  },
-  {
-    id: 'goal-tv',
-    name: 'Goal TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://goaltv-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Sports',
-    country: 'International',
-    language: 'English',
-  },
-
-  // ══════════════════════════════════════════════
-  //  🎬  MOVIES
-  // ══════════════════════════════════════════════
-  {
-    id: 'comet-tv',
-    name: 'Comet TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://comet-tv-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'charge-tv',
-    name: 'Charge! (Action Movies)',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://charge-tv-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'shout-factory',
-    name: 'Shout! Factory TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://shout-factory-tv-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'horror-channel',
-    name: 'Horror Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://horror-channel-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'westerns-channel',
-    name: 'Westerns Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://westerns-channel-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'hallmark-movies',
-    name: 'Hallmark Movies',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://hallmark-movies-now-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'lifetime-movies',
-    name: 'Lifetime Movies',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://lifetime-movie-club-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'amc',
-    name: 'AMC',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://amc-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'tcm',
-    name: 'Turner Classic Movies',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://tcm-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'film-rise',
-    name: 'FilmRise Movies',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://filmrise-movies-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'popcornflix',
-    name: 'Popcornflix',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://popcornflix-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'dove-channel',
-    name: 'Dove Channel (Family)',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bounce_TV_logo.svg/60px-Bounce_TV_logo.svg.png',
-    streamUrl: 'https://dove-channel-1-it.samsung.wurl.tv/playlist.m3u8',
-    category: 'Movies',
-    country: 'United States',
-    language: 'English',
   },
 ];

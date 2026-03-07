@@ -52,15 +52,6 @@ export const channels: Channel[] = [
     language: 'English',
   },
   {
-    id: 'pbs-kids',
-    name: 'PBS Kids',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PBS_Kids_Logo_2013.svg/120px-PBS_Kids_Logo_2013.svg.png',
-    streamUrl: 'https://livestream.pbskids.org/out/v1/14507d931bbe48a69287e4850e53443c/est.m3u8',
-    category: 'Kids',
-    country: 'United States',
-    language: 'English',
-  },
-  {
     id: 'cspan',
     name: 'C-SPAN',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/C-SPAN_logo.svg/120px-C-SPAN_logo.svg.png',
@@ -88,37 +79,10 @@ export const channels: Channel[] = [
     language: 'English',
   },
   {
-    id: 'cnn-international',
-    name: 'CNN International',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/CNN.svg/120px-CNN.svg.png',
-    streamUrl: 'https://turnerlive.warnermediacdn.com/hls/live/586495/cnngo/cnn_slate/VIDEO_0_3564000.m3u8',
-    category: 'US',
-    country: 'United States',
-    language: 'English',
-  },
-  {
     id: 'metv',
     name: 'MeTV',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Me-TV_logo.svg/120px-Me-TV_logo.svg.png',
     streamUrl: 'http://104.255.88.155/metv/index.m3u8',
-    category: 'US',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'comet-tv',
-    name: 'Comet TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Comet_TV_logo.png/120px-Comet_TV_logo.png',
-    streamUrl: 'https://fast-channels.sinclairstoryline.com/COMET/index.m3u8',
-    category: 'US',
-    country: 'United States',
-    language: 'English',
-  },
-  {
-    id: 'charge-tv',
-    name: 'Charge! TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/5c/Charge_TV_logo.svg/120px-Charge_TV_logo.svg.png',
-    streamUrl: 'https://fast-channels.sinclairstoryline.com/CHARGE/index.m3u8',
     category: 'US',
     country: 'United States',
     language: 'English',
@@ -195,7 +159,7 @@ export const channels: Channel[] = [
   //  🧒  KIDS
   // ══════════════════════════════════════════════
   {
-    id: 'pbs-kids-2',
+    id: 'pbs-kids',
     name: 'PBS Kids',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PBS_Kids_Logo_2013.svg/120px-PBS_Kids_Logo_2013.svg.png',
     streamUrl: 'https://livestream.pbskids.org/out/v1/14507d931bbe48a69287e4850e53443c/est.m3u8',
@@ -212,16 +176,6 @@ export const channels: Channel[] = [
     country: 'United States',
     language: 'English',
   },
-  {
-    id: 'dove-channel',
-    name: 'Dove Channel',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PBS_Kids_Logo_2013.svg/60px-PBS_Kids_Logo_2013.svg.png',
-    streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01438-ewscrippscompan-dove-stirr/playlist.m3u8',
-    category: 'Kids',
-    country: 'United States',
-    language: 'English',
-  },
-
   // ══════════════════════════════════════════════
   //  ⚽  SPORTS
   // ══════════════════════════════════════════════
@@ -279,17 +233,6 @@ export const channels: Channel[] = [
     country: 'Europe',
     language: 'English',
   },
-  {
-    id: 'arryadia-sports',
-    name: 'Arryadia Sport',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Arryadia_Logo.svg/120px-Arryadia_Logo.svg.png',
-    streamUrl: 'https://stream-lb.livemedia.ma/arryadia/hls/master.m3u8',
-    referer: 'https://snrtlive.ma/',
-    category: 'Sports',
-    country: 'Morocco',
-    language: 'Arabic',
-  },
-
   // ══════════════════════════════════════════════
   //  🇲🇱  MALI
   // ══════════════════════════════════════════════

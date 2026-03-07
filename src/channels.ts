@@ -16,7 +16,7 @@ export function proxyUrl(rawUrl: string, referer?: string): string {
 }
 
 export const categories = [
-  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Animals', 'Kids',
+  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Burkina Faso', 'Cameroun', 'Animals', 'Kids',
 ];
 
 export const channels: Channel[] = [
@@ -552,6 +552,32 @@ export const channels: Channel[] = [
     category: 'News',
     country: 'Afrique',
     language: 'English',
+  },
+
+  // ══════════════════════════════════════════════
+  //  🇧🇫  BURKINA FASO
+  // ══════════════════════════════════════════════
+  {
+    id: 'rtb-bf',
+    name: 'RTB Burkina',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Burkina_Faso.svg/60px-Flag_of_Burkina_Faso.svg.png',
+    streamUrl: 'http://69.64.57.208/rtb/playlist.m3u8',
+    category: 'Burkina Faso',
+    country: 'Burkina Faso',
+    language: 'French',
+  },
+
+  // ══════════════════════════════════════════════
+  //  🇨🇲  CAMEROUN
+  // ══════════════════════════════════════════════
+  {
+    id: 'crtv-cameroun',
+    name: 'CRTV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/60px-Flag_of_Cameroon.svg.png',
+    streamUrl: 'http://69.64.57.208/crtv/playlist.m3u8',
+    category: 'Cameroun',
+    country: 'Cameroun',
+    language: 'French/English',
   },
 
   // ══════════════════════════════════════════════

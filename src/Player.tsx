@@ -18,6 +18,7 @@ export default function Player({ channel, onClose }: PlayerProps) {
   const [showBar, setShowBar] = useState(true);
   const [isFs, setIsFs] = useState(!!document.fullscreenElement);
   const [reported, setReported] = useState(false);
+  const autoRetryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { setReported(false); }, [channel]);
 
@@ -82,6 +83,9 @@ export default function Player({ channel, onClose }: PlayerProps) {
           setStatus('error');
           hls.destroy();
           hlsRef.current = null;
+          // Auto-retry once after 5 seconds
+          if (autoRetryRef.current) clearTimeout(autoRetryRef.current);
+          autoRetryRef.current = setTimeout(() => setRetryKey((k) => k + 1), 5000);
         }
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -102,7 +106,11 @@ export default function Player({ channel, onClose }: PlayerProps) {
 
   useEffect(() => {
     startStream();
-    return () => { hlsRef.current?.destroy(); hlsRef.current = null; };
+    return () => {
+      hlsRef.current?.destroy();
+      hlsRef.current = null;
+      if (autoRetryRef.current) clearTimeout(autoRetryRef.current);
+    };
   }, [startStream]);
 
   const toggleFullscreen = useCallback(() => {

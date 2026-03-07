@@ -19,6 +19,8 @@ const categoryIcons: Record<string, string> = {
   Animals: '🦁',
   Kids: '🧒',
   Congo: '🇨🇩',
+  'Burkina Faso': '🇧🇫',
+  Cameroun: '🇨🇲',
 };
 
 function loadFavorites(): Set<string> {
@@ -361,6 +363,11 @@ export default function App() {
             }}
           >
             {categoryIcons[cat]} {cat}
+            {cat !== 'All' && cat !== 'Favorites' && (
+              <span className="cat-count">
+                {channels.filter(c => c.category === cat).length}
+              </span>
+            )}
           </button>
         ))}
       </nav>

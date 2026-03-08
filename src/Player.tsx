@@ -322,7 +322,9 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
 
   if (!channel) return null;
 
-  const alwaysShow = status !== 'playing';
+  // Only force the topbar visible when there's an error (retry/back buttons needed).
+  // During loading/buffering the spinner in the center is enough — let the bar auto-hide.
+  const alwaysShow = status === 'error';
 
   const formatSleep = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -451,11 +453,10 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         <span className="ibk-bug-ibk">IBK</span><span className="ibk-bug-tv">TV</span>
       </div>
 
-      {/* Video */}
+      {/* Video — no native controls; custom topbar handles UI */}
       <video
         ref={videoRef}
         className="fs-video"
-        controls
         autoPlay
         playsInline={!isIOS}
         style={{ display: status === 'error' ? 'none' : 'block' }}

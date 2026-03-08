@@ -61,9 +61,15 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     hideTimer.current = setTimeout(() => setShowBar(false), 4000);
   }, []);
 
-  // Start the 4-second hide timer on every status change, not just 'playing'.
+  // Bump the hide timer only when relevant:
+  // - Initial load (not yet started): show bar so user sees something is loading
+  // - Status becomes 'playing': show bar briefly then auto-hide
+  // - Rebuffering (loading after first play): skip — mini spinner handles it,
+  //   bumping here would reset the timer and keep the bar stuck visible forever
   useEffect(() => {
-    if (status !== 'error') bumpBar();
+    if (status === 'error') return;
+    if (status === 'loading' && hasStartedRef.current) return;
+    bumpBar();
     return () => { if (hideTimer.current) clearTimeout(hideTimer.current); };
   }, [status, bumpBar]);
 

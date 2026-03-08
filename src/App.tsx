@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from 'react';
 import { channels, categories } from './channels';
 import type { Channel } from './channels';
-import Player from './Player';
 import './App.css';
+
+const Player = lazy(() => import('./Player'));
 
 const categoryIcons: Record<string, string> = {
   All: '📺',
@@ -21,6 +22,9 @@ const categoryIcons: Record<string, string> = {
   Congo: '🇨🇩',
   'Burkina Faso': '🇧🇫',
   Cameroun: '🇨🇲',
+  Benin: '🇧🇯',
+  Togo: '🇹🇬',
+  Arabic: '🕌',
 };
 
 function loadFavorites(): Set<string> {
@@ -64,8 +68,45 @@ function loadCatOrder(): string[] {
   return [...categories];
 }
 
+function hasAcceptedTerms(): boolean {
+  return localStorage.getItem('ibktv-terms-accepted') === '1';
+}
+
+function TermsModal({ onAccept }: { onAccept: () => void }) {
+  return (
+    <div className="terms-overlay">
+      <div className="terms-box">
+        <h2>Welcome to IBK TV</h2>
+        <p className="terms-subtitle">Free Live West African Television</p>
+        <div className="terms-body">
+          <p>By using IBK TV you agree to the following:</p>
+          <ul>
+            <li>This app streams publicly available live TV channels for personal, non-commercial use only.</li>
+            <li>IBK TV does not host any content. All streams are provided by third-party broadcasters.</li>
+            <li>No personal data is collected. Favorites and history are stored locally on your device only.</li>
+            <li>Some channels may be unavailable due to broadcaster restrictions in your region.</li>
+            <li>For any questions or concerns, contact us at <a href="mailto:keibk@protonmail.com" style={{color:'#fcd116'}}>keibk@protonmail.com</a></li>
+          </ul>
+          <p>
+            View our{' '}
+            <a href="/privacy-policy.html" target="_blank" rel="noreferrer">
+              Privacy Policy
+            </a>
+          </p>
+        </div>
+        <button className="terms-accept-btn" onClick={onAccept}>
+          I Agree — Watch TV
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
+  const [termsAccepted, setTermsAccepted] = useState(hasAcceptedTerms);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [gridReady, setGridReady] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [search, setSearch] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(0);
@@ -78,6 +119,13 @@ export default function App() {
   const [catOrder, setCatOrder] = useState<string[]>(loadCatOrder);
   const [catMoving, setCatMoving] = useState(false);
   const [showPrayer, setShowPrayer] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [brokenIds, setBrokenIds] = useState<Set<string>>(() => {
+    try { return new Set(JSON.parse(localStorage.getItem('ibktv-broken') || '[]')); } catch { return new Set(); }
+  });
+  const [favToast, setFavToast] = useState('');
+  const [cardMenuOpen, setCardMenuOpen] = useState(false);
+  const [cardMenuChoice, setCardMenuChoice] = useState<'watch' | 'fav'>('watch');
   const [dragOver, setDragOver] = useState<string | null>(null);
   const dragCat = useRef<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -85,10 +133,28 @@ export default function App() {
   const gridRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const tick = () => setClock(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    const goOnline = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener('online', goOnline);
+    window.addEventListener('offline', goOffline);
+    return () => { window.removeEventListener('online', goOnline); window.removeEventListener('offline', goOffline); };
+  }, []);
+
+  // Defer grid render by one tick so the skeleton shows first
+  useEffect(() => {
+    const id = setTimeout(() => setGridReady(true), 300);
+    return () => clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    const tick = () => setClock(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }));
     tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+    // Update only when the minute changes — avoids 60 re-renders/min
+    const msUntilNextMinute = 60_000 - (Date.now() % 60_000);
+    let recurId: ReturnType<typeof setTimeout>;
+    const schedule = () => { tick(); recurId = setTimeout(schedule, 60_000); };
+    const initialId = setTimeout(schedule, msUntilNextMinute);
+    return () => { clearTimeout(initialId); clearTimeout(recurId!); };
   }, []);
 
   const onCatDragStart = useCallback((cat: string) => {
@@ -132,18 +198,16 @@ export default function App() {
     });
   }, []);
 
-  const filtered = channels.filter((ch) => {
-    const matchCat =
-      activeCategory === 'All'
-        ? true
-        : activeCategory === 'Favorites'
-        ? favorites.has(ch.id)
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase();
+    return channels.filter((ch) => {
+      const matchCat =
+        activeCategory === 'All' ? true
+        : activeCategory === 'Favorites' ? favorites.has(ch.id)
         : ch.category === activeCategory;
-    const matchSearch =
-      ch.name.toLowerCase().includes(search.toLowerCase()) ||
-      ch.country.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
+      return matchCat && (ch.name.toLowerCase().includes(q) || ch.country.toLowerCase().includes(q));
+    });
+  }, [activeCategory, favorites, search]);
 
   // Get actual rendered column count from the CSS grid
   const getGridCols = useCallback(() => {
@@ -156,10 +220,26 @@ export default function App() {
     return Math.max(Math.floor(window.innerWidth / 165), 2);
   }, []);
 
+  // Refresh broken IDs when player closes (after user may have reported a channel)
+  useEffect(() => {
+    if (!selectedChannel) {
+      try { setBrokenIds(new Set(JSON.parse(localStorage.getItem('ibktv-broken') || '[]'))); } catch { /* ignore */ }
+    }
+  }, [selectedChannel]);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (selectedChannel) return;
       if (document.activeElement === searchRef.current) return;
+
+      if (e.key === '?' || e.key === '/') {
+        e.preventDefault();
+        setShowShortcuts((v) => !v);
+        return;
+      }
+      if (e.key === 'Escape') {
+        if (showShortcuts) { setShowShortcuts(false); return; }
+      }
 
       if (zone === 'cat') {
         if (catMoving) {
@@ -234,6 +314,43 @@ export default function App() {
 
       // zone === 'grid'
       if (filtered.length === 0) return;
+
+      // If card action menu is open, intercept all keys
+      if (cardMenuOpen) {
+        e.preventDefault();
+        const ch = filtered[focusedIndex];
+        switch (e.key) {
+          case 'ArrowLeft':
+          case 'ArrowRight':
+            setCardMenuChoice((c) => c === 'watch' ? 'fav' : 'watch');
+            break;
+          case 'Enter':
+            if (!e.repeat) {
+              if (cardMenuChoice === 'watch' && ch) {
+                saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch);
+              } else if (ch) {
+                const adding = !favorites.has(ch.id);
+                setFavorites((prev) => {
+                  const next = new Set(prev);
+                  if (adding) next.add(ch.id); else next.delete(ch.id);
+                  localStorage.setItem('ibktv-favorites', JSON.stringify([...next]));
+                  return next;
+                });
+                setFavToast(adding ? `❤ ${ch.name} added` : `💔 ${ch.name} removed`);
+                setTimeout(() => setFavToast(''), 2500);
+              }
+              setCardMenuOpen(false);
+            }
+            break;
+          case 'ArrowUp':
+          case 'ArrowDown':
+          case 'Escape':
+            setCardMenuOpen(false);
+            break;
+        }
+        return;
+      }
+
       const cols = getGridCols();
 
       switch (e.key) {
@@ -252,7 +369,6 @@ export default function App() {
         case 'ArrowUp':
           e.preventDefault();
           if (focusedIndex < cols) {
-            // First row → go up to category bar
             setZone('cat');
             setFocusedCat(Math.max(catOrder.indexOf(activeCategory), 0));
           } else {
@@ -260,10 +376,10 @@ export default function App() {
           }
           break;
         case 'Enter':
-          if (filtered[focusedIndex]) {
-            saveRecent(filtered[focusedIndex]);
-            setRecent(loadRecent());
-            setSelectedChannel(filtered[focusedIndex]);
+          e.preventDefault();
+          if (!e.repeat && filtered[focusedIndex]) {
+            setCardMenuChoice('watch');
+            setCardMenuOpen(true);
           }
           break;
         case 'f':
@@ -284,7 +400,10 @@ export default function App() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [filtered, focusedIndex, focusedCat, zone, selectedChannel, activeCategory, getGridCols, catOrder, catMoving]);
+  }, [filtered, focusedIndex, focusedCat, zone, selectedChannel, activeCategory, getGridCols, catOrder, catMoving, showShortcuts, cardMenuOpen, cardMenuChoice, favorites]);
+
+  // Close card menu when focus moves away
+  useEffect(() => { setCardMenuOpen(false); }, [focusedIndex, activeCategory, search, selectedChannel]);
 
   useEffect(() => { setFocusedIndex(0); }, [activeCategory, search]);
 
@@ -317,6 +436,15 @@ export default function App() {
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
+
+  if (!termsAccepted) {
+    return (
+      <TermsModal onAccept={() => {
+        localStorage.setItem('ibktv-terms-accepted', '1');
+        setTermsAccepted(true);
+      }} />
+    );
+  }
 
   return (
     <div className="app">
@@ -381,6 +509,8 @@ export default function App() {
         )}
         <span>{filtered.length} channel{filtered.length !== 1 ? 's' : ''}</span>
         {search && <span className="search-label"> · "<em>{search}</em>"</span>}
+        {zone === 'grid' && !cardMenuOpen && <span className="search-label"> · <em>↵ = Watch/❤ menu</em></span>}
+        {zone === 'grid' && cardMenuOpen && <span className="search-label"> · <em>← → to choose · ↵ confirm · ↑↓ cancel</em></span>}
         {zone === 'cat' && !catMoving && <span className="search-label"> · <em>←→ navigate · Enter to select · M to move</em></span>}
         {zone === 'cat' && catMoving && <span className="search-label"> · <em>←→ to move · Enter/M to confirm</em></span>}
       </div>
@@ -391,7 +521,7 @@ export default function App() {
           <div className="recent-row">
             {recent.map(ch => (
               <div key={ch.id} className="recent-chip" onClick={() => { saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }}>
-                <img src={ch.logo} alt={ch.name} className="recent-logo" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <img src={ch.logo} alt={ch.name} className="recent-logo" loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 <span>{ch.name}</span>
               </div>
             ))}
@@ -399,21 +529,46 @@ export default function App() {
         </div>
       )}
 
+      {!isOnline && (
+        <div className="no-internet">
+          <div className="no-internet-icon">📡</div>
+          <div className="no-internet-title">No Internet Connection</div>
+          <div className="no-internet-sub">Check your Wi-Fi or cable and try again.</div>
+        </div>
+      )}
+
       <main className="grid" ref={gridRef}>
-        {filtered.length === 0 && (
+        {!gridReady && Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="channel-card skeleton-card">
+            <div className="skeleton skeleton-logo" />
+            <div className="skeleton-info">
+              <div className="skeleton skeleton-name" />
+              <div className="skeleton skeleton-meta" />
+            </div>
+          </div>
+        ))}
+        {gridReady && filtered.length === 0 && (
           <div className="empty">
             {activeCategory === 'Favorites' ? 'No favorites yet — press ❤️ on any channel.' : 'No channels found.'}
           </div>
         )}
-        {filtered.map((ch, idx) => (
+        {gridReady && filtered.map((ch, idx) => (
           <div
             key={ch.id}
-            className={`channel-card ${idx === focusedIndex && zone === 'grid' ? 'focused' : ''}`}
+            className={`channel-card ${idx === focusedIndex && zone === 'grid' ? 'focused' : ''} ${brokenIds.has(ch.id) ? 'channel-card--broken' : ''}`}
             onClick={() => { saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }}
             onMouseEnter={() => { setFocusedIndex(idx); setZone('grid'); }}
             tabIndex={0}
           >
             <div className="live-badge">● LIVE</div>
+            {idx === focusedIndex && zone === 'grid' && cardMenuOpen && (
+              <div className="card-menu">
+                <div className={`card-menu-opt ${cardMenuChoice === 'watch' ? 'card-menu-opt--active' : ''}`}>▶ Watch</div>
+                <div className={`card-menu-opt ${cardMenuChoice === 'fav' ? 'card-menu-opt--active' : ''}`}>
+                  {favorites.has(ch.id) ? '💔 Unfav' : '❤ Fav'}
+                </div>
+              </div>
+            )}
             <button
               className={`fav-btn ${favorites.has(ch.id) ? 'fav-btn--active' : ''}`}
               onClick={(e) => toggleFavorite(ch.id, e)}
@@ -426,6 +581,8 @@ export default function App() {
                 src={ch.logo}
                 alt={ch.name}
                 className="card-logo"
+                loading="lazy"
+                decoding="async"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
               <div className="card-logo-fallback">{ch.name.slice(0, 3).toUpperCase()}</div>
@@ -442,16 +599,57 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        IBK-TV · ↑ to category bar · Enter to watch · F to favorite · M to reorder categories
+        IBK-TV · ↑ to category bar · ↵ = Watch/❤ menu · M to reorder · <button className="shortcuts-hint" onClick={() => setShowShortcuts(true)}>? Shortcuts</button>
       </footer>
 
-      <Player channel={selectedChannel} onClose={() => window.history.back()} />
+      {favToast && <div className="fav-toast">{favToast}</div>}
+
+      <Suspense fallback={null}>
+        <Player
+          channel={selectedChannel}
+          onClose={() => { setSelectedChannel(null); window.history.back(); }}
+          hasPrev={selectedChannel ? filtered.findIndex(c => c.id === selectedChannel.id) > 0 : false}
+          hasNext={selectedChannel ? filtered.findIndex(c => c.id === selectedChannel.id) < filtered.length - 1 : false}
+          onPrev={() => {
+            if (!selectedChannel) return;
+            const idx = filtered.findIndex(c => c.id === selectedChannel.id);
+            if (idx > 0) { const ch = filtered[idx - 1]; saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }
+          }}
+          onNext={() => {
+            if (!selectedChannel) return;
+            const idx = filtered.findIndex(c => c.id === selectedChannel.id);
+            if (idx < filtered.length - 1) { const ch = filtered[idx + 1]; saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }
+          }}
+        />
+      </Suspense>
 
       {showPrayer && (
         <div className="prayer-overlay">
           <div className="prayer-box">
             <div className="prayer-flag" />
             <p className="prayer-text">🙏 Please pray for Mali for Peace 🙏</p>
+          </div>
+        </div>
+      )}
+
+      {showShortcuts && (
+        <div className="shortcuts-overlay" onClick={() => setShowShortcuts(false)}>
+          <div className="shortcuts-box" onClick={(e) => e.stopPropagation()}>
+            <div className="shortcuts-title">⌨️ Keyboard Shortcuts</div>
+            <table className="shortcuts-table">
+              <tbody>
+                <tr><td>↑ ↓ ← →</td><td>Navigate channels / categories</td></tr>
+                <tr><td>Enter</td><td>Watch channel</td></tr>
+                <tr><td>F</td><td>Toggle favorite</td></tr>
+                <tr><td>M</td><td>Reorder categories (hold ← →)</td></tr>
+                <tr><td>? or /</td><td>Show / hide this panel</td></tr>
+                <tr className="shortcuts-divider"><td colSpan={2}>— In Player —</td></tr>
+                <tr><td>Escape</td><td>Close player / exit fullscreen</td></tr>
+                <tr><td>← →</td><td>Previous / Next channel</td></tr>
+                <tr><td>Space</td><td>Play / Pause</td></tr>
+              </tbody>
+            </table>
+            <button className="shortcuts-close" onClick={() => setShowShortcuts(false)}>✕ Close</button>
           </div>
         </div>
       )}

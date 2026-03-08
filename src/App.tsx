@@ -68,42 +68,7 @@ function loadCatOrder(): string[] {
   return [...categories];
 }
 
-function hasAcceptedTerms(): boolean {
-  return localStorage.getItem('ibktv-terms-accepted') === '1';
-}
-
-function TermsModal({ onAccept }: { onAccept: () => void }) {
-  return (
-    <div className="terms-overlay">
-      <div className="terms-box">
-        <h2>Welcome to IBK TV</h2>
-        <p className="terms-subtitle">Free Live West African Television</p>
-        <div className="terms-body">
-          <p>By using IBK TV you agree to the following:</p>
-          <ul>
-            <li>This app streams publicly available live TV channels for personal, non-commercial use only.</li>
-            <li>IBK TV does not host any content. All streams are provided by third-party broadcasters.</li>
-            <li>No personal data is collected. Favorites and history are stored locally on your device only.</li>
-            <li>Some channels may be unavailable due to broadcaster restrictions in your region.</li>
-            <li>For any questions or concerns, contact us at <a href="mailto:keibk@protonmail.com" style={{color:'#fcd116'}}>keibk@protonmail.com</a></li>
-          </ul>
-          <p>
-            View our{' '}
-            <a href="/privacy-policy.html" target="_blank" rel="noreferrer">
-              Privacy Policy
-            </a>
-          </p>
-        </div>
-        <button className="terms-accept-btn" onClick={onAccept}>
-          I Agree — Watch TV
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
-  const [termsAccepted, setTermsAccepted] = useState(hasAcceptedTerms);
   const [activeCategory, setActiveCategory] = useState('All');
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [gridReady, setGridReady] = useState(false);
@@ -436,15 +401,6 @@ export default function App() {
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
-
-  if (!termsAccepted) {
-    return (
-      <TermsModal onAccept={() => {
-        localStorage.setItem('ibktv-terms-accepted', '1');
-        setTermsAccepted(true);
-      }} />
-    );
-  }
 
   return (
     <div className="app">

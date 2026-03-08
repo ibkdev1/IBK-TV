@@ -45,9 +45,10 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     hideTimer.current = setTimeout(() => setShowBar(false), 4000);
   }, []);
 
-  // Start hiding once playing begins
+  // Start the 4-second hide timer on every status change, not just 'playing'.
+  // Previously showBar=true on mount with no timer → bar stuck visible forever.
   useEffect(() => {
-    if (status === 'playing') bumpBar();
+    if (status !== 'error') bumpBar();
     return () => { if (hideTimer.current) clearTimeout(hideTimer.current); };
   }, [status, bumpBar]);
 
@@ -279,12 +280,12 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     }
   }, []);
 
-  // Track fullscreen state for the button icon
+  // Track fullscreen state; also restart hide timer so bar shows briefly then hides
   useEffect(() => {
-    const onChange = () => setIsFs(!!document.fullscreenElement);
+    const onChange = () => { setIsFs(!!document.fullscreenElement); bumpBar(); };
     document.addEventListener('fullscreenchange', onChange);
     return () => document.removeEventListener('fullscreenchange', onChange);
-  }, []);
+  }, [bumpBar]);
 
   // Escape closes on desktop; TV remote Back is handled via popstate in App.tsx
   // Only runs when a channel is actually open

@@ -22,6 +22,12 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sleepIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const autoRetryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const stallRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastTimeRef = useRef<number>(0);
+  const stallCountRef = useRef<number>(0);
+  const usingBackupRef = useRef(false);
+  // True once playback has started at least once — used to show mini vs full loading overlay
+  const hasStartedRef = useRef(false);
 
   const [status, setStatus] = useState<'loading' | 'playing' | 'error'>('loading');
   const [errMsg, setErrMsg] = useState('');
@@ -29,14 +35,24 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const [showBar, setShowBar] = useState(true);
   const [isFs, setIsFs] = useState(!!document.fullscreenElement);
   const [reported, setReported] = useState(false);
-  const [volume, setVolume] = useState(1);
+  // Load volume from last session; default 1
+  const [volume, setVolume] = useState<number>(() => {
+    try { return parseFloat(localStorage.getItem('ibktv-volume') || '1'); } catch { return 1; }
+  });
   const [muted, setMuted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [sleepMins, setSleepMins] = useState<number | null>(null);
   const [sleepRemaining, setSleepRemaining] = useState<number>(0);
   const [showSleepPicker, setShowSleepPicker] = useState(false);
   const [isPip, setIsPip] = useState(false);
 
-  useEffect(() => { setReported(false); usingBackupRef.current = false; }, [channel]);
+  // Reset state when channel changes
+  useEffect(() => {
+    setReported(false);
+    usingBackupRef.current = false;
+    hasStartedRef.current = false;
+    setIsPaused(false);
+  }, [channel]);
 
   // Show the top bar and restart the 4-second hide timer
   const bumpBar = useCallback(() => {
@@ -46,7 +62,6 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   }, []);
 
   // Start the 4-second hide timer on every status change, not just 'playing'.
-  // Previously showBar=true on mount with no timer → bar stuck visible forever.
   useEffect(() => {
     if (status !== 'error') bumpBar();
     return () => { if (hideTimer.current) clearTimeout(hideTimer.current); };
@@ -56,11 +71,6 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     const el = videoRef.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
     if (el?.webkitEnterFullscreen) el.webkitEnterFullscreen();
   }, []);
-
-  const stallRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const lastTimeRef = useRef<number>(0);
-  const stallCountRef = useRef<number>(0);
-  const usingBackupRef = useRef(false);
 
   const startStream = useCallback(() => {
     if (!channel || !videoRef.current) return;
@@ -86,21 +96,21 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         enableWorker: true,
 
         // ── Buffer — small target so playback starts fast ─────────────────
-        maxBufferLength:       20,   // 20 s target (live TV needs < 30 s)
-        maxMaxBufferLength:    60,   // hard cap
-        backBufferLength:      10,   // keep 10 s behind (live, no real seeking)
-        maxBufferHole:         0.5,  // tolerate small gaps without stalling
-        highBufferWatchdogPeriod: 0.5, // check buffer health every 500 ms
+        maxBufferLength:       20,
+        maxMaxBufferLength:    60,
+        backBufferLength:      10,
+        maxBufferHole:         0.5,
+        highBufferWatchdogPeriod: 0.5,
 
         // ── Start downloading next fragment before current one ends ───────
         startFragPrefetch: true,
         lowLatencyMode:    false,
 
         // ── Live stream — stay close to live edge ─────────────────────────
-        liveSyncDurationCount:      2,  // 2 segments behind live edge (~12 s)
-        liveMaxLatencyDurationCount: 8, // seek forward if >8 segments behind
+        liveSyncDurationCount:      2,
+        liveMaxLatencyDurationCount: 8,
 
-        // ── Fragment loading — fast retries, shorter timeout ──────────────
+        // ── Fragment loading — fast retries ───────────────────────────────
         fragLoadingTimeOut:        12000,
         fragLoadingMaxRetry:       10,
         fragLoadingRetryDelay:     300,
@@ -114,14 +124,14 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         levelLoadingMaxRetry:    6,
         levelLoadingRetryDelay:  300,
 
-        // ── Stall recovery — nudge before full reload ─────────────────────
+        // ── Stall recovery ────────────────────────────────────────────────
         nudgeOffset:         0.5,
         nudgeMaxRetry:       8,
         maxStarvationDelay:  2,
         maxLoadingDelay:     2,
 
-        // ── ABR — assume decent bandwidth, switch quality fast ────────────
-        abrEwmaDefaultEstimate: 2_000_000, // 2 Mbps initial guess
+        // ── ABR ───────────────────────────────────────────────────────────
+        abrEwmaDefaultEstimate: 2_000_000,
         abrEwmaFastLive:        2,
         abrEwmaSlowLive:        6,
         abrBandWidthFactor:     0.90,
@@ -134,22 +144,20 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         video.play().then(() => {
           if (isIOS) enterIOSFullscreen();
+          hasStartedRef.current = true;
         }).catch(() => {});
         setStatus('playing');
       });
 
-      // Non-fatal errors: let HLS.js handle internally, but log for awareness
       hls.on(Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-            // Network blip — try to recover without full reload
             hls.startLoad();
           } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
             hls.recoverMediaError();
           } else {
             hls.destroy();
             hlsRef.current = null;
-            // Try backup URL once before giving up
             if (channel.backupUrl && !usingBackupRef.current) {
               usingBackupRef.current = true;
               setRetryKey((k) => k + 1);
@@ -163,7 +171,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         }
       });
 
-      // Stall detector — nudge at 3 s, 6 s; full reload at 12 s of frozen playback
+      // Stall detector — nudge then reload
       stallRef.current = setInterval(() => {
         const v = videoRef.current;
         if (!v || v.paused || v.ended) return;
@@ -188,6 +196,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
       video.onloadedmetadata = () => {
         video.play().then(() => {
           if (isIOS) enterIOSFullscreen();
+          hasStartedRef.current = true;
         }).catch(() => {});
         setStatus('playing');
       };
@@ -215,6 +224,25 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     v.volume = volume;
     v.muted = muted;
   }, [volume, muted]);
+
+  // Persist volume across sessions
+  useEffect(() => {
+    try { localStorage.setItem('ibktv-volume', String(volume)); } catch {}
+  }, [volume]);
+
+  // Track play/pause state from the video element
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onPause = () => setIsPaused(true);
+    const onPlay  = () => setIsPaused(false);
+    v.addEventListener('pause', onPause);
+    v.addEventListener('play',  onPlay);
+    return () => {
+      v.removeEventListener('pause', onPause);
+      v.removeEventListener('play',  onPlay);
+    };
+  }, []);
 
   // Sleep timer countdown
   useEffect(() => {
@@ -264,31 +292,36 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     } catch { /* browser may block */ }
   }, []);
 
+  const togglePlayPause = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) v.play().catch(() => {});
+    else v.pause();
+    bumpBar();
+  }, [bumpBar]);
+
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) {
       document.exitFullscreen();
       return;
     }
-    // Fullscreen the whole player container so the back button auto-hides inside it
     const container = playerRef.current;
     if (container?.requestFullscreen) {
       container.requestFullscreen();
     } else {
-      // iOS Safari fallback: fullscreen the video element directly
       const vid = videoRef.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
       vid?.webkitEnterFullscreen?.();
     }
   }, []);
 
-  // Track fullscreen state; also restart hide timer so bar shows briefly then hides
+  // Track fullscreen state; restart hide timer on enter/exit
   useEffect(() => {
     const onChange = () => { setIsFs(!!document.fullscreenElement); bumpBar(); };
     document.addEventListener('fullscreenchange', onChange);
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, [bumpBar]);
 
-  // Escape closes on desktop; TV remote Back is handled via popstate in App.tsx
-  // Only runs when a channel is actually open
+  // Keyboard shortcuts
   useEffect(() => {
     if (!channel) return;
     const onKey = (e: KeyboardEvent) => {
@@ -307,11 +340,18 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           break;
         case ' ':
           e.preventDefault();
-          if (videoRef.current) {
-            if (videoRef.current.paused) videoRef.current.play().catch(() => {});
-            else videoRef.current.pause();
-          }
+          togglePlayPause();
+          break;
+        case 'm':
+        case 'M':
+          e.preventDefault();
+          setMuted((m) => !m);
           bumpBar();
+          break;
+        case 'f':
+        case 'F':
+          e.preventDefault();
+          toggleFullscreen();
           break;
         default:
           bumpBar();
@@ -319,12 +359,11 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [channel, onClose, onPrev, onNext, bumpBar]);
+  }, [channel, onClose, onPrev, onNext, bumpBar, togglePlayPause, toggleFullscreen]);
 
   if (!channel) return null;
 
-  // Only force the topbar visible when there's an error (retry/back buttons needed).
-  // During loading/buffering the spinner in the center is enough — let the bar auto-hide.
+  // Only force the topbar visible on error (retry/back buttons must be reachable).
   const alwaysShow = status === 'error';
 
   const formatSleep = (secs: number) => {
@@ -339,12 +378,24 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
       {/* Top info bar — auto-hides during playback */}
       <div className={`fs-topbar ${showBar || alwaysShow ? 'fs-topbar--visible' : ''}`}>
         <button className="fs-back" onClick={(e) => { e.stopPropagation(); onClose(); }}>‹ Back</button>
+
+        {/* Prev / Next */}
         {hasPrev && (
           <button className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onPrev?.(); }} title="Previous channel (←)">⏮</button>
         )}
         {hasNext && (
           <button className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onNext?.(); }} title="Next channel (→)">⏭</button>
         )}
+
+        {/* Play / Pause */}
+        <button
+          className="fs-playpause"
+          onClick={(e) => { e.stopPropagation(); togglePlayPause(); }}
+          title={isPaused ? 'Play (Space)' : 'Pause (Space)'}
+        >
+          {isPaused ? '▶' : '⏸'}
+        </button>
+
         <img
           src={channel.logo}
           alt={channel.name}
@@ -360,11 +411,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         {/* Sleep timer */}
         <div className="fs-sleep-wrap" onClick={(e) => e.stopPropagation()}>
           {sleepMins !== null ? (
-            <button
-              className="fs-sleep-btn fs-sleep-btn--active"
-              onClick={() => setSleepMins(null)}
-              title="Cancel sleep timer"
-            >
+            <button className="fs-sleep-btn fs-sleep-btn--active" onClick={() => setSleepMins(null)} title="Cancel sleep timer">
               ⏱ {formatSleep(sleepRemaining)}
             </button>
           ) : (
@@ -379,11 +426,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           {showSleepPicker && sleepMins === null && (
             <div className="fs-sleep-picker">
               {SLEEP_OPTIONS.map((m) => (
-                <button
-                  key={m}
-                  className="fs-sleep-option"
-                  onClick={() => { setSleepMins(m); setShowSleepPicker(false); }}
-                >
+                <button key={m} className="fs-sleep-option" onClick={() => { setSleepMins(m); setShowSleepPicker(false); }}>
                   {m} min
                 </button>
               ))}
@@ -391,27 +434,17 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           )}
         </div>
 
-        {/* Volume control */}
+        {/* Volume */}
         <div className="fs-vol-wrap" onClick={(e) => e.stopPropagation()}>
-          <button
-            className="fs-vol-icon"
-            onClick={() => setMuted((m) => !m)}
-            title={muted ? 'Unmute' : 'Mute'}
-          >
+          <button className="fs-vol-icon" onClick={() => setMuted((m) => !m)} title={muted ? 'Unmute (M)' : 'Mute (M)'}>
             {muted || volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊'}
           </button>
           <input
             type="range"
             className="fs-vol-slider"
-            min={0}
-            max={1}
-            step={0.05}
+            min={0} max={1} step={0.05}
             value={muted ? 0 : volume}
-            onChange={(e) => {
-              const v = parseFloat(e.target.value);
-              setVolume(v);
-              setMuted(v === 0);
-            }}
+            onChange={(e) => { const v = parseFloat(e.target.value); setVolume(v); setMuted(v === 0); }}
           />
         </div>
 
@@ -426,6 +459,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           </button>
         )}
 
+        {/* Report broken */}
         <button
           className={`fs-report-btn ${reported ? 'fs-report-btn--done' : ''}`}
           onClick={(e) => {
@@ -443,18 +477,21 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         >
           {reported ? '✓ Reported' : '⚑ Broken?'}
         </button>
-        <button className="fs-fullscreen-btn" onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} aria-label="Toggle fullscreen">
+
+        {/* Fullscreen */}
+        <button className="fs-fullscreen-btn" onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} aria-label="Toggle fullscreen (F)">
           {isFs ? '⤡' : '⤢'}
         </button>
+
         <div className="fs-brand"><span className="wm-ibk">IBK</span><span className="wm-tv">TV</span></div>
       </div>
 
-      {/* Persistent IBK TV bug — always visible, survives native fullscreen */}
+      {/* Persistent IBK TV watermark */}
       <div className="ibk-bug" aria-hidden="true">
         <span className="ibk-bug-ibk">IBK</span><span className="ibk-bug-tv">TV</span>
       </div>
 
-      {/* Video — no native controls; custom topbar handles UI */}
+      {/* Video */}
       <video
         ref={videoRef}
         className="fs-video"
@@ -463,12 +500,19 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         style={{ display: status === 'error' ? 'none' : 'block' }}
       />
 
-      {/* Loading */}
-      {status === 'loading' && (
+      {/* First-load overlay — full screen spinner */}
+      {status === 'loading' && !hasStartedRef.current && (
         <div className="fs-msg">
           <div className="spinner" />
           <p>Connecting to stream…</p>
           <small>{channel.name} · {channel.country}</small>
+        </div>
+      )}
+
+      {/* Rebuffering indicator — small corner spinner, video stays visible */}
+      {status === 'loading' && hasStartedRef.current && (
+        <div className="fs-rebuf">
+          <div className="spinner spinner--sm" />
         </div>
       )}
 

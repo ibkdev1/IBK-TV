@@ -6,6 +6,7 @@ export interface Channel {
   country: string;
   language: string;
   streamUrl: string;
+  backupUrl?: string;   // fallback if primary fails
   referer?: string;
 }
 
@@ -16,7 +17,7 @@ export function proxyUrl(rawUrl: string, referer?: string): string {
 }
 
 export const categories = [
-  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Burkina Faso', 'Cameroun', 'Animals', 'Kids',
+  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Burkina Faso', 'Cameroun', 'Benin', 'Togo', 'Arabic', 'Animals', 'Kids',
 ];
 
 export const channels: Channel[] = [
@@ -37,7 +38,8 @@ export const channels: Channel[] = [
     id: 'cbs-news',
     name: 'CBS News',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/CBS_News_logo_%282022%29.svg/120px-CBS_News_logo_%282022%29.svg.png',
-    streamUrl: 'https://cbsnews.akamaized.net/hls/live/2020607/cbsnlineup_8/master.m3u8',
+    streamUrl: 'https://cbsn-us.cbsnstream.cbsnews.com/out/v1/55a8648e8f134e82a470f83d562deeca/master.m3u8',
+    backupUrl: 'https://cbsnews.akamaized.net/hls/live/2020607/cbsnlineup_8/master.m3u8',
     category: 'US',
     country: 'United States',
     language: 'English',
@@ -176,6 +178,7 @@ export const channels: Channel[] = [
     name: 'ORTM 1',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/15/ORTM_logo.png/120px-ORTM_logo.png',
     streamUrl: 'http://69.64.57.208/ortm/playlist.m3u8',
+    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/ortm1/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -185,6 +188,7 @@ export const channels: Channel[] = [
     name: 'ORTM 2',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/15/ORTM_logo.png/120px-ORTM_logo.png',
     streamUrl: 'http://69.64.57.208/tm2/playlist.m3u8',
+    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/ortm2/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -194,6 +198,7 @@ export const channels: Channel[] = [
     name: 'Africable TV',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/9/9c/Africable_logo.png/120px-Africable_logo.png',
     streamUrl: 'http://69.64.57.208/africable/playlist.m3u8',
+    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/africable/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -203,6 +208,7 @@ export const channels: Channel[] = [
     name: 'D3 TV',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'https://live20.bozztv.com/akamaissh101/ssh101/d3tvnet/playlist.m3u8',
+    backupUrl:  'http://69.64.57.208/d3tv/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -212,6 +218,7 @@ export const channels: Channel[] = [
     name: 'Niéta TV',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'http://69.64.57.208/nieta/playlist.m3u8',
+    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/nieta/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -221,6 +228,7 @@ export const channels: Channel[] = [
     name: 'TM1 TV',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'http://69.64.57.208/tm1/playlist.m3u8',
+    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/tm1/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -230,6 +238,7 @@ export const channels: Channel[] = [
     name: 'Cherifla TV',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'http://69.64.57.208/cherifla/playlist.m3u8',
+    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/cherifla/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -242,7 +251,8 @@ export const channels: Channel[] = [
     id: 'rti1',
     name: 'RTI 1',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/0/02/RTI_1_logo_2014.png/120px-RTI_1_logo_2014.png',
-    streamUrl: 'https://video1.getstreamhosting.com:1936/8336/8336/playlist.m3u8',
+    streamUrl: 'http://69.64.57.208/rti1/playlist.m3u8',
+    backupUrl: 'http://69.64.57.208:8080/rti1/playlist.m3u8',
     category: "Côte d'Ivoire",
     country: "Côte d'Ivoire",
     language: 'French',
@@ -251,7 +261,8 @@ export const channels: Channel[] = [
     id: 'rti2',
     name: 'RTI 2',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/0/02/RTI_1_logo_2014.png/120px-RTI_1_logo_2014.png',
-    streamUrl: 'https://video1.getstreamhosting.com:1936/8066/8066/playlist.m3u8',
+    streamUrl: 'http://69.64.57.208/rti2/playlist.m3u8',
+    backupUrl: 'http://69.64.57.208:8080/rti2/playlist.m3u8',
     category: "Côte d'Ivoire",
     country: "Côte d'Ivoire",
     language: 'French',
@@ -269,7 +280,8 @@ export const channels: Channel[] = [
     id: 'nci',
     name: 'NCI',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/2/27/Logo_NCI.png/120px-Logo_NCI.png',
-    streamUrl: 'https://video1.getstreamhosting.com:1936/8338/8338/playlist.m3u8',
+    streamUrl: 'http://69.64.57.208/nci/playlist.m3u8',
+    backupUrl: 'http://69.64.57.208:8080/nci/playlist.m3u8',
     category: "Côte d'Ivoire",
     country: "Côte d'Ivoire",
     language: 'French',
@@ -301,6 +313,7 @@ export const channels: Channel[] = [
     name: 'Télé Sahel',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/3/3f/Logo_Tele_Sahel.png/120px-Logo_Tele_Sahel.png',
     streamUrl: 'https://mediaserver1.castpin.com/hls/telesahel/index.m3u8',
+    backupUrl: 'http://69.64.57.208/telesahel/playlist.m3u8',
     category: 'Niger',
     country: 'Niger',
     language: 'French',
@@ -479,16 +492,26 @@ export const channels: Channel[] = [
   },
   {
     id: 'tv5monde',
-    name: 'TV5 Monde',
+    name: 'TV5Monde Afrique',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/TV5MONDE_logo_2019.svg/120px-TV5MONDE_logo_2019.svg.png',
     streamUrl: 'https://liveh12.vtvprime.vn/hls/TV5/03.m3u8',
+    backupUrl: 'https://ott.tv5monde.com/Content/HLS/Live/channel(afrique)/variant.m3u8',
     category: 'France',
     country: 'France / Afrique',
     language: 'French',
   },
   {
+    id: 'france24-fr',
+    name: 'France 24 Français',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/France_24_logo_%282011%29.svg/120px-France_24_logo_%282011%29.svg.png',
+    streamUrl: 'https://live.france24.com/hls/live/2037179-b/F24_FR_HI_HLS/master_2300.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+  {
     id: 'france24-en',
-    name: 'France 24',
+    name: 'France 24 English',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/France_24_logo_%282011%29.svg/120px-France_24_logo_%282011%29.svg.png',
     streamUrl: 'https://live.france24.com/hls/live/2037218-b/F24_EN_HI_HLS/master_2300.m3u8',
     category: 'France',
@@ -562,6 +585,34 @@ export const channels: Channel[] = [
     name: 'RTB Burkina',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Burkina_Faso.svg/60px-Flag_of_Burkina_Faso.svg.png',
     streamUrl: 'http://69.64.57.208/rtb/playlist.m3u8',
+    backupUrl: 'https://edge12.vedge.infomaniak.com/livecast/ik:rtblive1_8/manifest.m3u8',
+    category: 'Burkina Faso',
+    country: 'Burkina Faso',
+    language: 'French',
+  },
+  {
+    id: 'rtb2-bf',
+    name: 'RTB2 Hauts-Bassins',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Burkina_Faso.svg/60px-Flag_of_Burkina_Faso.svg.png',
+    streamUrl: 'https://edge20.vedge.infomaniak.com/livecast/ik:rtbguiriko-1/manifest.m3u8',
+    category: 'Burkina Faso',
+    country: 'Burkina Faso',
+    language: 'French',
+  },
+  {
+    id: 'rtb3-bf',
+    name: 'RTB3',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Burkina_Faso.svg/60px-Flag_of_Burkina_Faso.svg.png',
+    streamUrl: 'https://edge13.vedge.infomaniak.com/livecast/ik:rtb3-1/manifest.m3u8',
+    category: 'Burkina Faso',
+    country: 'Burkina Faso',
+    language: 'French',
+  },
+  {
+    id: 'burkina-info-tv',
+    name: 'Burkina Info TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Burkina_Faso.svg/60px-Flag_of_Burkina_Faso.svg.png',
+    streamUrl: 'http://69.64.57.208/burkinainfo/index.m3u8',
     category: 'Burkina Faso',
     country: 'Burkina Faso',
     language: 'French',
@@ -600,5 +651,65 @@ export const channels: Channel[] = [
     category: 'Congo',
     country: 'Congo Brazzaville',
     language: 'French',
+  },
+
+  // ══════════════════════════════════════════════
+  //  🇧🇯  BENIN
+  // ══════════════════════════════════════════════
+  {
+    id: 'ortb-benin',
+    name: 'ORTB Bénin',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Benin.svg/60px-Flag_of_Benin.svg.png',
+    streamUrl: 'https://strhls.streamakaci.tv/ortb/ortb2-multi/playlist.m3u8',
+    backupUrl: 'https://strhls.streamakaci.tv/ortb/ortb.m3u8',
+    category: 'Benin',
+    country: 'Bénin',
+    language: 'French',
+  },
+
+  // ══════════════════════════════════════════════
+  //  🇹🇬  TOGO
+  // ══════════════════════════════════════════════
+  {
+    id: 'tvt-togo',
+    name: 'TVT (Télévision Togolaise)',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Flag_of_Togo.svg/60px-Flag_of_Togo.svg.png',
+    streamUrl: 'http://69.64.57.208/tvt/playlist.m3u8',
+    category: 'Togo',
+    country: 'Togo',
+    language: 'French',
+  },
+
+  // ══════════════════════════════════════════════
+  //  🕌  ARABIC / ISLAMIC
+  // ══════════════════════════════════════════════
+  {
+    id: 'france24-arabic',
+    name: 'France 24 عربي',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/France_24_logo.svg/120px-France_24_logo.svg.png',
+    streamUrl: 'https://live.france24.com/hls/live/2037222-b/F24_AR_HI_HLS/master_2300.m3u8',
+    category: 'Arabic',
+    country: 'France/Arabic',
+    language: 'Arabic',
+  },
+  {
+    id: 'aljazeera-arabic',
+    name: 'Al Jazeera عربي',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Al_Jazeera_channel_logo.svg/120px-Al_Jazeera_channel_logo.svg.png',
+    streamUrl: 'https://live-hls-aje-ak.getaj.net/AJE/03.m3u8',
+    referer: 'https://www.aljazeera.com/',
+    category: 'Arabic',
+    country: 'Qatar',
+    language: 'Arabic',
+  },
+  {
+    id: 'dw-arabic',
+    name: 'DW عربي',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Deutsche_Welle_symbol_2012.svg/120px-Deutsche_Welle_symbol_2012.svg.png',
+    streamUrl: 'https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/index.m3u8',
+    referer: 'https://www.dw.com/',
+    category: 'Arabic',
+    country: 'Germany/Arabic',
+    language: 'Arabic',
   },
 ];

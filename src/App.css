@@ -218,6 +218,12 @@
   flex-shrink: 0;
   letter-spacing: 1px;
 }
+.clock-tz {
+  font-size: 0.65rem;
+  font-weight: 400;
+  opacity: 0.6;
+  letter-spacing: 0;
+}
 
 
 /* ── CATEGORY NAV ────────────────────────────────────────────── */

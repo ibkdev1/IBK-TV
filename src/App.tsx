@@ -422,7 +422,7 @@ export default function App() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="clock">{clock}</div>
+        <div className="clock">{clock} <span className="clock-tz">ET</span></div>
       </header>
 
       <div className="categories-wrap">

@@ -61,14 +61,12 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     hideTimer.current = setTimeout(() => setShowBar(false), 4000);
   }, []);
 
-  // Bump the hide timer only when relevant:
-  // - Initial load (not yet started): show bar so user sees something is loading
-  // - Status becomes 'playing': show bar briefly then auto-hide
-  // - Rebuffering (loading after first play): skip — mini spinner handles it,
-  //   bumping here would reset the timer and keep the bar stuck visible forever
+  // Show the bar only on first load and first play.
+  // Skip during stall recoveries (loading OR playing when hasStarted is already true)
+  // so frequent stalls don't keep the hide timer from ever firing.
   useEffect(() => {
     if (status === 'error') return;
-    if (status === 'loading' && hasStartedRef.current) return;
+    if (hasStartedRef.current) return; // stall recovery — don't touch the timer
     bumpBar();
     return () => { if (hideTimer.current) clearTimeout(hideTimer.current); };
   }, [status, bumpBar]);
@@ -102,9 +100,9 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         enableWorker: true,
 
         // ── Buffer — small target so playback starts fast ─────────────────
-        maxBufferLength:       20,
-        maxMaxBufferLength:    60,
-        backBufferLength:      10,
+        maxBufferLength:       10,
+        maxMaxBufferLength:    20,
+        backBufferLength:       5,
         maxBufferHole:         0.5,
         highBufferWatchdogPeriod: 0.5,
 
@@ -113,8 +111,8 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         lowLatencyMode:    false,
 
         // ── Live stream — stay close to live edge ─────────────────────────
-        liveSyncDurationCount:      2,
-        liveMaxLatencyDurationCount: 8,
+        liveSyncDurationCount:       2,
+        liveMaxLatencyDurationCount: 4,
 
         // ── Fragment loading — fast retries ───────────────────────────────
         fragLoadingTimeOut:        12000,

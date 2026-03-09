@@ -261,7 +261,13 @@ app.use((req, res, next) => {
 
 const distDir = path.join(__dirname, 'dist');
 if (fs.existsSync(distDir)) {
-  app.use(express.static(distDir, { maxAge: '1d', etag: true }));
+  // index.html — never cache so updates are instant
+  app.get('/', (_req, res) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+  // Hashed JS/CSS assets — cache 1 year (filename changes on every build)
+  app.use(express.static(distDir, { maxAge: '1y', etag: true }));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

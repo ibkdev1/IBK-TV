@@ -400,6 +400,38 @@ app.get('/stream', async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // HEALTH + STATS
 // ─────────────────────────────────────────────────────────────────────────────
+// Short download page — accessible at /get
+app.get('/get', (_, res) => {
+  res.setHeader('Cache-Control', 'no-cache');
+  res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>IBK TV — Download</title>
+<style>
+  body{margin:0;background:#0a0a0f;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;color:#fff;}
+  .card{text-align:center;padding:40px 60px;background:#16161f;border-radius:20px;box-shadow:0 8px 40px #0006;}
+  .logo{font-size:3rem;font-weight:900;letter-spacing:-1px;}
+  .logo span{color:#e63}
+  p{color:#aaa;margin:8px 0 32px;}
+  a.btn{display:inline-block;background:#e63;color:#fff;text-decoration:none;padding:18px 48px;border-radius:12px;font-size:1.3rem;font-weight:700;letter-spacing:.5px;}
+  a.btn:hover{background:#ff5544;}
+  .code{margin-top:28px;color:#555;font-size:.85rem;}
+  .code span{color:#888;font-family:monospace;font-size:1rem;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo"><span>IBK</span>TV</div>
+  <p>Android TV App — v1.3</p>
+  <a class="btn" href="/IBK-TV.apk">⬇ Download APK</a>
+  <div class="code">Short link: <span>is.gd/IBKtv2024</span></div>
+</div>
+</body>
+</html>`);
+});
+
 app.get('/health', (_, res) => res.json({
   status:   'ok',
   port:     PORT,

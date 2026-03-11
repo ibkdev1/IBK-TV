@@ -4,20 +4,30 @@ plugins {
 
 android {
     namespace 'com.ibktv.app'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.ibktv.app"
         minSdk 21
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        targetSdk 35
+        versionCode 14
+        versionName "1.4"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(KEYSTORE_FILE)
+            storePassword KEYSTORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            signingConfig signingConfigs.debug
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

@@ -15,12 +15,12 @@ const PORT = process.env.PORT || 3001;
 //    per segment.  maxSockets=50 so many segments can download in parallel.
 // ─────────────────────────────────────────────────────────────────────────────
 const httpAgent  = new http.Agent ({
-  keepAlive: true, maxSockets: 50, maxFreeSockets: 20,
-  timeout: 25000, scheduling: 'lifo',
+  keepAlive: true, maxSockets: 16, maxFreeSockets: 4,
+  timeout: 20000, scheduling: 'lifo',
 });
 const httpsAgent = new https.Agent({
-  keepAlive: true, maxSockets: 50, maxFreeSockets: 20,
-  timeout: 25000, scheduling: 'lifo',
+  keepAlive: true, maxSockets: 16, maxFreeSockets: 4,
+  timeout: 20000, scheduling: 'lifo',
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -28,8 +28,8 @@ const httpsAgent = new https.Agent({
 //    TS segments are immutable — once fetched, serve instantly from RAM.
 //    200 slots × ~500 KB avg = ~100 MB, stays within Railway free tier limits.
 // ─────────────────────────────────────────────────────────────────────────────
-const LRU_MAX = 500;
-const SEG_TTL = 45_000; // 45 s (segments expire from playlist after ~30 s)
+const LRU_MAX = 60;
+const SEG_TTL = 30_000; // 30 s
 
 class LRUCache {
   constructor(max) {
@@ -204,8 +204,8 @@ function prefetch(m3u8Body, baseUrl) {
       if (/\.(ts|aac|mp4|m4s|fmp4)(\?|$)/i.test(abs)) segUrls.push(abs);
     } catch { /* skip */ }
   }
-  // Fetch next 12 segments in background (fire-and-forget)
-  segUrls.slice(0, 12).forEach(url => {
+  // Fetch next 3 segments in background (fire-and-forget)
+  segUrls.slice(0, 3).forEach(url => {
     if (!segCache.get(url) && !inFlight.has(url)) {
       fetchSegment(url).catch(() => {});
     }

@@ -1,71 +1,100 @@
 package com.ibktv.app;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.google.gson.Gson;
-import java.util.ArrayList;
-import java.util.List;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
-    private RecyclerView rvCategories, rvChannels;
-    private TextView tvChannelCount;
-    private ChannelAdapter channelAdapter;
-    private List<Channel> allChannels = new ArrayList<>();
-    private String selectedCategory = "All";
+    // ⚠ UPDATE THIS URL after you deploy to Railway!
+    // It will look like: https://ibk-tv-production.up.railway.app
+    private static final String APP_URL = "https://ibk-tv-production.up.railway.app";
+
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        // Keep screen on while streaming
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        rvCategories   = findViewById(R.id.rvCategories);
-        rvChannels     = findViewById(R.id.rvChannels);
-        tvChannelCount = findViewById(R.id.tvChannelCount);
+        webView = new WebView(this);
+        setContentView(webView);
 
-        // Load channels from assets/channels.json
-        ChannelRepository.ChannelData data = ChannelRepository.load(this);
-        allChannels = data.channels != null ? data.channels : new ArrayList<>();
-        List<String> categories = data.categories != null ? data.categories : new ArrayList<>();
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setMediaPlaybackRequiresUserGesture(false);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
 
-        // Category tabs (horizontal)
-        CategoryAdapter catAdapter = new CategoryAdapter(categories, cat -> {
-            selectedCategory = cat;
-            filterChannels();
+        // Identify as Android TV / Fire TV for better compatibility
+        settings.setUserAgentString(
+            "Mozilla/5.0 (Linux; Android 9; AFTMM Build/PS7233) " +
+            "AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/120.0.0.0 Safari/537.36 IBK-TV/1.0"
+        );
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
         });
-        rvCategories.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        rvCategories.setAdapter(catAdapter);
 
-        // Channel grid — 6 cols on TV/tablet, 4 on phone
-        int cols = getResources().getConfiguration().screenWidthDp >= 840 ? 6 : 4;
-        channelAdapter = new ChannelAdapter(new ArrayList<>(), channel -> {
-            Intent intent = new Intent(this, PlayerActivity.class);
-            intent.putExtra("channel", new Gson().toJson(channel));
-            startActivity(intent);
-        });
-        rvChannels.setLayoutManager(new GridLayoutManager(this, cols));
-        rvChannels.setAdapter(channelAdapter);
+        webView.setWebChromeClient(new WebChromeClient());
 
-        filterChannels();
+        // Immersive full-screen — hides nav bar and status bar
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            | View.SYSTEM_UI_FLAG_FULLSCREEN
+            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
+
+        webView.loadUrl(APP_URL);
     }
 
-    private void filterChannels() {
-        List<Channel> filtered = new ArrayList<>();
-        for (Channel ch : allChannels) {
-            if ("All".equals(selectedCategory) || selectedCategory.equals(ch.category)) {
-                filtered.add(ch);
-            }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+            webView.goBack();
+            return true;
         }
-        channelAdapter.setChannels(filtered);
-        tvChannelCount.setText(filtered.size() + " channels");
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        webView.onResume();
+        webView.resumeTimers();
+    }
+
+    @Override
+    protected void onPause() {
+        webView.pauseTimers();
+        webView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (webView != null) {
+            webView.destroy();
+        }
+        super.onDestroy();
     }
 }

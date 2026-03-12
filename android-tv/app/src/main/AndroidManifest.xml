@@ -3,9 +3,13 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- TV: touchscreen not required, D-pad used instead -->
+    <!-- Works on all TV types: no touchscreen needed, D-pad/remote used -->
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <uses-feature android:name="android.hardware.ethernet" android:required="false" />
+    <!-- leanback=false makes it install on Android TV AND regular Android devices -->
     <uses-feature android:name="android.software.leanback" android:required="false" />
 
     <application
@@ -14,8 +18,10 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
 
+        <!-- Main channel grid -->
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|uiMode"
@@ -24,12 +30,19 @@
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!-- Standard Android launcher -->
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!-- Android TV / Fire TV leanback launcher -->
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <!-- Video player -->
+        <activity
+            android:name=".PlayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|uiMode"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"/>
 
     </application>
 </manifest>

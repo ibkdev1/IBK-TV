@@ -28,7 +28,7 @@ const httpsAgent = new https.Agent({
 //    TS segments are immutable — once fetched, serve instantly from RAM.
 //    200 slots × ~500 KB avg = ~100 MB, stays within Railway free tier limits.
 // ─────────────────────────────────────────────────────────────────────────────
-const LRU_MAX = 60;
+const LRU_MAX = 120;
 const SEG_TTL = 30_000; // 30 s
 
 class LRUCache {

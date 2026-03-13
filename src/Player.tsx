@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Hls from 'hls.js';
 import type { Channel } from './channels';
-import { proxyUrl } from './channels';
+import { streamUrl } from './channels';
 
 interface PlayerProps {
   channel: Channel | null;
@@ -90,9 +90,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     lastTimeRef.current = 0;
     stallCountRef.current = 0;
 
-    const src = (usingBackupRef.current && channel.backupUrl)
-      ? proxyUrl(channel.backupUrl, channel.referer)
-      : proxyUrl(channel.streamUrl, channel.referer);
+    const src = streamUrl(channel, usingBackupRef.current);
 
     if (Hls.isSupported()) {
       const hls = new Hls({

@@ -8,12 +8,18 @@ export interface Channel {
   streamUrl: string;
   backupUrl?: string;   // fallback if primary fails
   referer?: string;
+  direct?: boolean;     // true = stream directly, bypass Railway proxy
 }
 
 export function proxyUrl(rawUrl: string, referer?: string): string {
   let url = `/stream?url=${encodeURIComponent(rawUrl)}`;
   if (referer) url += `&referer=${encodeURIComponent(referer)}`;
   return url;
+}
+
+export function streamUrl(ch: Channel, useBackup = false): string {
+  const raw = (useBackup && ch.backupUrl) ? ch.backupUrl : ch.streamUrl;
+  return ch.direct ? raw : proxyUrl(raw, ch.referer);
 }
 
 export const categories = [
@@ -33,6 +39,7 @@ export const channels: Channel[] = [
     category: 'US',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'cbs-news',
@@ -43,6 +50,7 @@ export const channels: Channel[] = [
     category: 'US',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'court-tv',
@@ -52,6 +60,7 @@ export const channels: Channel[] = [
     category: 'US',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'cspan',
@@ -61,6 +70,7 @@ export const channels: Channel[] = [
     category: 'US',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'nbc-news-now',
@@ -70,6 +80,7 @@ export const channels: Channel[] = [
     category: 'US',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'nasa-tv',
@@ -79,6 +90,7 @@ export const channels: Channel[] = [
     category: 'US',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'metv',
@@ -119,6 +131,7 @@ export const channels: Channel[] = [
     category: 'Animals',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'pet-collective',
@@ -128,6 +141,7 @@ export const channels: Channel[] = [
     category: 'Animals',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
   {
     id: 'sport-outdoor',
@@ -168,6 +182,7 @@ export const channels: Channel[] = [
     category: 'Kids',
     country: 'United States',
     language: 'English',
+    direct: true,
   },
 
   // ══════════════════════════════════════════════
@@ -471,6 +486,7 @@ export const channels: Channel[] = [
     category: 'France',
     country: 'France',
     language: 'French',
+    direct: true,
   },
   {
     id: 'france2',
@@ -489,6 +505,7 @@ export const channels: Channel[] = [
     category: 'France',
     country: 'France/Europe',
     language: 'French',
+    direct: true,
   },
   {
     id: 'tv5monde',
@@ -508,6 +525,7 @@ export const channels: Channel[] = [
     category: 'France',
     country: 'France',
     language: 'French',
+    direct: true,
   },
   {
     id: 'france24-en',
@@ -517,6 +535,7 @@ export const channels: Channel[] = [
     category: 'France',
     country: 'France',
     language: 'English',
+    direct: true,
   },
 
   // ══════════════════════════════════════════════
@@ -539,6 +558,7 @@ export const channels: Channel[] = [
     category: 'News',
     country: 'Germany',
     language: 'English',
+    direct: true,
   },
   {
     id: 'trt-world',
@@ -548,6 +568,7 @@ export const channels: Channel[] = [
     category: 'News',
     country: 'Turkey',
     language: 'English',
+    direct: true,
   },
   {
     id: 'aljazeera',
@@ -557,6 +578,7 @@ export const channels: Channel[] = [
     category: 'News',
     country: 'International',
     language: 'English',
+    direct: true,
   },
   {
     id: 'africa24-fr',
@@ -566,6 +588,7 @@ export const channels: Channel[] = [
     category: 'News',
     country: 'Afrique',
     language: 'French',
+    direct: true,
   },
   {
     id: 'africa24-en',
@@ -575,6 +598,7 @@ export const channels: Channel[] = [
     category: 'News',
     country: 'Afrique',
     language: 'English',
+    direct: true,
   },
 
   // ══════════════════════════════════════════════

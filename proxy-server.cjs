@@ -15,11 +15,11 @@ const PORT = process.env.PORT || 3001;
 //    per segment.  maxSockets=50 so many segments can download in parallel.
 // ─────────────────────────────────────────────────────────────────────────────
 const httpAgent  = new http.Agent ({
-  keepAlive: true, maxSockets: 16, maxFreeSockets: 4,
+  keepAlive: true, maxSockets: 6, maxFreeSockets: 2,
   timeout: 20000, scheduling: 'lifo',
 });
 const httpsAgent = new https.Agent({
-  keepAlive: true, maxSockets: 16, maxFreeSockets: 4,
+  keepAlive: true, maxSockets: 6, maxFreeSockets: 2,
   timeout: 20000, scheduling: 'lifo',
 });
 
@@ -29,7 +29,7 @@ const httpsAgent = new https.Agent({
 //    200 slots × ~500 KB avg = ~100 MB, stays within Railway free tier limits.
 // ─────────────────────────────────────────────────────────────────────────────
 const LRU_MAX = 60;
-const SEG_TTL = 30_000; // 30 s
+const SEG_TTL = 60_000; // 60 s
 
 class LRUCache {
   constructor(max) {
@@ -61,7 +61,7 @@ const segCache = new LRUCache(LRU_MAX);
 // 2b. PLAYLIST CACHE (short TTL — HLS players poll every 2–8 s)
 //     Second poll hits cache instantly instead of making a round-trip upstream.
 // ─────────────────────────────────────────────────────────────────────────────
-const PLAYLIST_TTL = 6_000; // 6 s
+const PLAYLIST_TTL = 10_000; // 10 s
 const playlistCache = new Map(); // url → { rewritten, body, finalUrl, ts }
 
 function gzipSend(req, res, text) {
@@ -347,5 +347,5 @@ app.get(/(.*)/, (_, res) => {
 
 app.listen(PORT, () => {
   console.log(`\n🔁  IBK-TV Proxy  →  http://localhost:${PORT}`);
-  console.log(`   Keep-alive: ON | LRU cache: ${LRU_MAX} slots | Prefetch: 8 segments ahead\n`);
+  console.log(`   Keep-alive: ON | LRU cache: ${LRU_MAX} slots | Seg TTL: 60s | Playlist TTL: 10s\n`);
 });

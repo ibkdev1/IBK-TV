@@ -8,16 +8,47 @@ export interface Channel {
   streamUrl: string;
   backupUrl?: string;   // fallback if primary fails
   referer?: string;
+  direct?: boolean;     // force direct (skip proxy)
 }
 
-export function proxyUrl(rawUrl: string, referer?: string): string {
-  let url = `/stream?url=${encodeURIComponent(rawUrl)}`;
-  if (referer) url += `&referer=${encodeURIComponent(referer)}`;
-  return url;
+// CDN domains known to allow CORS — streams load directly without proxy
+const DIRECT_DOMAINS = [
+  'akamaized.net',
+  'cloudfront.net',
+  'wurl.tv',
+  'amagi.tv',
+  'tubi.video',
+  'lotus.stingray.com',
+  'ntdtv.com',
+  'savoir.media',
+  'pbskids.org',
+  'bozztv.com',
+  'mediatailor.us-east-1.amazonaws.com',
+  'wurl.com',
+  'mediapackage.us-east-1.amazonaws.com',
+];
+
+export function proxyUrl(rawUrl: string, referer?: string, direct?: boolean): string {
+  // Channels with referer headers always need proxy
+  if (referer) {
+    let url = `/stream?url=${encodeURIComponent(rawUrl)}`;
+    url += `&referer=${encodeURIComponent(referer)}`;
+    return url;
+  }
+  // Explicit direct flag
+  if (direct) return rawUrl;
+  // Auto-detect CORS-friendly CDNs
+  try {
+    const hostname = new URL(rawUrl).hostname;
+    if (DIRECT_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d))) {
+      return rawUrl;
+    }
+  } catch { /* ignore */ }
+  return `/stream?url=${encodeURIComponent(rawUrl)}`;
 }
 
 export const categories = [
-  'All', 'Favorites', 'Mali', 'US', 'News', 'France', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Burkina Faso', 'Cameroun', 'Benin', 'Togo', 'Arabic', 'Animals', 'Kids',
+  'All', 'Favorites', 'Mali', 'US', 'News', 'France', 'Canada', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Burkina Faso', 'Cameroun', 'Benin', 'Togo', 'Arabic', 'Animals', 'Kids',
 ];
 
 export const channels: Channel[] = [
@@ -108,6 +139,16 @@ export const channels: Channel[] = [
     language: 'English',
   },
 
+  {
+    id: 'afroland-tv',
+    name: 'AfroLand TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
+    streamUrl: 'https://alt-al.otteravision.com/alt/al/al.m3u8',
+    category: 'US',
+    country: 'United States',
+    language: 'English',
+  },
+
   // ══════════════════════════════════════════════
   //  🦁  ANIMALS & NATURE
   // ══════════════════════════════════════════════
@@ -178,7 +219,6 @@ export const channels: Channel[] = [
     name: 'ORTM 1',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/15/ORTM_logo.png/120px-ORTM_logo.png',
     streamUrl: 'http://69.64.57.208/ortm/playlist.m3u8',
-    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/ortm1/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -188,7 +228,6 @@ export const channels: Channel[] = [
     name: 'ORTM 2',
     logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/15/ORTM_logo.png/120px-ORTM_logo.png',
     streamUrl: 'http://69.64.57.208/tm2/playlist.m3u8',
-    backupUrl:  'https://live20.bozztv.com/akamaissh101/ssh101/ortm2/playlist.m3u8',
     category: 'Mali',
     country: 'Mali',
     language: 'French',
@@ -519,6 +558,70 @@ export const channels: Channel[] = [
     language: 'English',
   },
 
+  {
+    id: 'france5',
+    name: 'France 5',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/२a/France_5_logo_2002.svg/120px-France_5_logo_2002.svg.png',
+    streamUrl: 'http://69.64.57.208/france5/mono.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+  {
+    id: 'franceinfo-tv',
+    name: 'Franceinfo TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Franceinfo_logo_2016.svg/120px-Franceinfo_logo_2016.svg.png',
+    streamUrl: 'https://raw.githubusercontent.com/Sibprod/streams/main/ressources/dm/py/hls/franceinfotv.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+  {
+    id: 'francophonie24',
+    name: 'Francophonie 24',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/60px-Flag_of_France.svg.png',
+    streamUrl: 'https://5421175365ea3.streamlock.net/live/smil:switch.smil/playlist.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+  {
+    id: 'generations-tv',
+    name: 'Générations TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/60px-Flag_of_France.svg.png',
+    streamUrl: 'https://event.vedge.infomaniak.com/livecast/ik:generation-tv/manifest.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+  {
+    id: 'africa24-sport',
+    name: 'Africa 24 Sport',
+    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1e/Africa_24_Logo.svg/120px-Africa_24_Logo.svg.png',
+    streamUrl: 'https://africa24.vedge.infomaniak.com/livecast/ik:africa24sport/manifest.m3u8',
+    category: 'France',
+    country: 'Afrique',
+    language: 'French',
+  },
+  {
+    id: 'fifa-plus-fr',
+    name: 'FIFA+ Français',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/FIFA_logo_without_slogan.svg/120px-FIFA_logo_without_slogan.svg.png',
+    streamUrl: 'https://37b4c228.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWZyX0ZJRkFQbHVzRnJlbmNoX0hMUw/playlist.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+  {
+    id: 'gong-tv',
+    name: 'Gong TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/60px-Flag_of_France.svg.png',
+    streamUrl: 'https://amg01596-gongnetworks-gong-ono-vh5f2.amagi.tv/1080p-vtt/index.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+
   // ══════════════════════════════════════════════
   //  📰  NEWS & INTERNATIONAL
   // ══════════════════════════════════════════════
@@ -683,6 +786,136 @@ export const channels: Channel[] = [
   // ══════════════════════════════════════════════
   //  🕌  ARABIC / ISLAMIC
   // ══════════════════════════════════════════════
+  // ══════════════════════════════════════════════
+  //  🇨🇦  CANADA
+  // ══════════════════════════════════════════════
+  {
+    id: 'citynews-toronto',
+    name: 'CityNews Toronto',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
+    streamUrl: 'https://citynewsregional.akamaized.net/hls/live/1024052/Regional_Live_7/master.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'citynews-calgary',
+    name: 'CityNews Calgary',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
+    streamUrl: 'https://citynewsregional.akamaized.net/hls/live/1024053/Regional_Live_8/master.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'citynews-vancouver',
+    name: 'CityNews Vancouver',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
+    streamUrl: 'https://citynewsregional.akamaized.net/hls/live/1024054/Regional_Live_9/master.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'cpac',
+    name: 'CPAC',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/73/CPAC_TV.png/120px-CPAC_TV.png',
+    streamUrl: 'https://d7z3qjdsxbwoq.cloudfront.net/groupa/live/f9809cea-1e07-47cd-a94d-2ddd3e1351db/live.isml/.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'ici-rdi',
+    name: 'ICI RDI',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/ICI_RDI.svg/120px-ICI_RDI.svg.png',
+    streamUrl: 'https://rcavlive.akamaized.net/hls/live/704025/xcanrdi/master.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'French',
+  },
+  {
+    id: 'ici-montreal',
+    name: 'ICI Montréal',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Ici_Radio-Canada_T%C3%A9l%C3%A9.svg/120px-Ici_Radio-Canada_T%C3%A9l%C3%A9.svg.png',
+    streamUrl: 'https://amdici.akamaized.net/hls/live/873426/ICI-Live-Stream/master.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'French',
+  },
+  {
+    id: 'ntd-canada',
+    name: 'NTD Canada',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/NTD_Television_logo.svg/120px-NTD_Television_logo.svg.png',
+    streamUrl: 'https://live.ntdtv.com/mllive860/playlist.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'tsn-the-ocho',
+    name: 'TSN The Ocho',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/TSN_Logo_2018.svg/120px-TSN_Logo_2018.svg.png',
+    streamUrl: 'https://d3pnbvng3bx2nj.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-rds8g35qfqrnv/TSN_The_Ocho.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'willow-sports',
+    name: 'Willow Sports',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Willow_TV_logo.svg/120px-Willow_TV_logo.svg.png',
+    streamUrl: 'https://d36r8jifhgsk5j.cloudfront.net/Willow_TV.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'love-nature-ca',
+    name: 'Love Nature',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Love_Nature_logo.png/120px-Love_Nature_logo.png',
+    streamUrl: 'https://aegis-cloudfront-1.tubi.video/6d6d0f24-8445-4b4c-bdf6-44f9e38beaa4/playlist.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'wild-tv',
+    name: 'Wild TV',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Wild_TV_Logo.png/120px-Wild_TV_Logo.png',
+    streamUrl: 'https://d1tm3cz23db55z.cloudfront.net/v1/master/9d062541f2ff39b5c0f48b743c6411d25f62fc25/DistroTV-MuxIP-WildTV/476.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'canal-savoir',
+    name: 'Canal Savoir',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Canal_Savoir_logo.png/120px-Canal_Savoir_logo.png',
+    streamUrl: 'https://hls.savoir.media/live/stream.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'French',
+  },
+  {
+    id: 'stingray-classic-rock',
+    name: 'Stingray Classic Rock',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Stingray_Music_logo.svg/120px-Stingray_Music_logo.svg.png',
+    streamUrl: 'https://lotus.stingray.com/manifest/ose-101ads-montreal/samsungtvplus/master.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+  {
+    id: 'stingray-djazz',
+    name: 'Stingray DJAZZ',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Stingray_Music_logo.svg/120px-Stingray_Music_logo.svg.png',
+    streamUrl: 'https://lotus.stingray.com/manifest/djazz-djaads-montreal/samsungtvplus/master.m3u8',
+    category: 'Canada',
+    country: 'Canada',
+    language: 'English',
+  },
+
   {
     id: 'france24-arabic',
     name: 'France 24 عربي',

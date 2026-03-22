@@ -25,6 +25,7 @@ const categoryIcons: Record<string, string> = {
   Benin: '🇧🇯',
   Togo: '🇹🇬',
   Arabic: '🕌',
+  Canada: '🇨🇦',
 };
 
 function loadFavorites(): Set<string> {
@@ -195,7 +196,14 @@ export default function App() {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (selectedChannel) return;
-      if (document.activeElement === searchRef.current) return;
+      if (document.activeElement === searchRef.current) {
+        if (e.key === 'ArrowDown' || e.key === 'Escape') {
+          e.preventDefault();
+          searchRef.current?.blur();
+          setZone('cat');
+        }
+        return;
+      }
 
       if (e.key === '?' || e.key === '/') {
         e.preventDefault();
@@ -272,6 +280,7 @@ export default function App() {
             break;
           case 'ArrowUp':
             e.preventDefault();
+            searchRef.current?.focus();
             break;
         }
         return;
@@ -417,6 +426,7 @@ export default function App() {
             ref={searchRef}
             className="search"
             type="text"
+            tabIndex={0}
             placeholder="🔍  Search channels..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -470,6 +480,28 @@ export default function App() {
         {zone === 'cat' && !catMoving && <span className="search-label"> · <em>←→ navigate · Enter to select · M to move</em></span>}
         {zone === 'cat' && catMoving && <span className="search-label"> · <em>←→ to move · Enter/M to confirm</em></span>}
       </div>
+
+      {activeCategory === 'All' && !search && (
+        <div className="featured-wrap">
+          <div className="featured-title">🔥 Featured — Mali & Africa</div>
+          <div className="featured-row">
+            {channels.filter(c => c.category === 'Mali').slice(0, 8).map(ch => (
+              <div
+                key={ch.id}
+                className="featured-card"
+                onClick={() => { saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }}
+              >
+                <div className="featured-logo">
+                  <img src={ch.logo} alt={ch.name} loading="lazy" decoding="async" onError={(e) => { e.currentTarget.style.display='none'; }} />
+                </div>
+                <div className="featured-overlay" />
+                <div className="featured-live">● LIVE</div>
+                <div className="featured-name">{ch.name}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {recent.length > 0 && activeCategory === 'All' && !search && (
         <div className="recent-wrap">
@@ -587,6 +619,7 @@ export default function App() {
           </div>
         </div>
       )}
+
 
       {showShortcuts && (
         <div className="shortcuts-overlay" onClick={() => setShowShortcuts(false)}>

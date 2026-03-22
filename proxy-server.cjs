@@ -28,8 +28,8 @@ const httpsAgent = new https.Agent({
 //    TS segments are immutable — once fetched, serve instantly from RAM.
 //    200 slots × ~500 KB avg = ~100 MB, stays within Railway free tier limits.
 // ─────────────────────────────────────────────────────────────────────────────
-const LRU_MAX = 120;
-const SEG_TTL = 45_000; // 45 s
+const LRU_MAX = 60;
+const SEG_TTL = 30_000; // 30 s
 
 class LRUCache {
   constructor(max) {
@@ -204,8 +204,8 @@ function prefetch(m3u8Body, baseUrl) {
       if (/\.(ts|aac|mp4|m4s|fmp4)(\?|$)/i.test(abs)) segUrls.push(abs);
     } catch { /* skip */ }
   }
-  // Fetch next 1 segment in background (fire-and-forget)
-  segUrls.slice(0, 1).forEach(url => {
+  // Fetch next 3 segments in background (fire-and-forget)
+  segUrls.slice(0, 3).forEach(url => {
     if (!segCache.get(url) && !inFlight.has(url)) {
       fetchSegment(url).catch(() => {});
     }

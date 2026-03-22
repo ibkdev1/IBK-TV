@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Hls from 'hls.js';
 import type { Channel } from './channels';
-import { streamUrl } from './channels';
+import { proxyUrl } from './channels';
 
 interface PlayerProps {
   channel: Channel | null;
@@ -45,6 +45,39 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const [sleepRemaining, setSleepRemaining] = useState<number>(0);
   const [showSleepPicker, setShowSleepPicker] = useState(false);
   const [isPip, setIsPip] = useState(false);
+  const BROADCAST_MESSAGES = [
+    '🇲🇱 Support Mali & the AES Alliance — Unity is Strength!',
+    '📺 Enjoying IBK TV? Share it with friends and family!',
+    '🌍 IBK TV — Free African & World TV, always live!',
+  ];
+  const [showBroadcast, setShowBroadcast] = useState(false);
+  const [broadcastMsg, setBroadcastMsg] = useState(0);
+  const broadcastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const broadcastIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const broadcastMsgIndexRef = useRef(0);
+
+  // Show rotating broadcast messages: first at 30s, then every 15 minutes, shows for 20 seconds
+  useEffect(() => {
+    if (!channel) return;
+    setShowBroadcast(false);
+    broadcastMsgIndexRef.current = 0;
+    if (broadcastTimerRef.current) clearTimeout(broadcastTimerRef.current);
+    if (broadcastIntervalRef.current) clearInterval(broadcastIntervalRef.current);
+    const show = () => {
+      setBroadcastMsg(broadcastMsgIndexRef.current % BROADCAST_MESSAGES.length);
+      broadcastMsgIndexRef.current += 1;
+      setShowBroadcast(true);
+      setTimeout(() => setShowBroadcast(false), 20_000);
+    };
+    broadcastTimerRef.current = setTimeout(() => {
+      show();
+      broadcastIntervalRef.current = setInterval(show, 5 * 60 * 1000);
+    }, 30_000);
+    return () => {
+      if (broadcastTimerRef.current) clearTimeout(broadcastTimerRef.current);
+      if (broadcastIntervalRef.current) clearInterval(broadcastIntervalRef.current);
+    };
+  }, [channel]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset state when channel changes
   useEffect(() => {
@@ -90,7 +123,9 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     lastTimeRef.current = 0;
     stallCountRef.current = 0;
 
-    const src = streamUrl(channel, usingBackupRef.current);
+    const src = (usingBackupRef.current && channel.backupUrl)
+      ? proxyUrl(channel.backupUrl, channel.referer, channel.direct)
+      : proxyUrl(channel.streamUrl, channel.referer, channel.direct);
 
     if (Hls.isSupported()) {
       const hls = new Hls({
@@ -355,6 +390,18 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           e.preventDefault();
           toggleFullscreen();
           break;
+        case 'ArrowUp':
+          e.preventDefault();
+          bumpBar();
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          bumpBar();
+          break;
+        case 'Enter':
+          e.preventDefault();
+          bumpBar();
+          break;
         default:
           bumpBar();
       }
@@ -379,18 +426,19 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
 
       {/* Top info bar — auto-hides during playback */}
       <div className={`fs-topbar ${showBar || alwaysShow ? 'fs-topbar--visible' : ''}`}>
-        <button className="fs-back" onClick={(e) => { e.stopPropagation(); onClose(); }}>‹ Back</button>
+        <button tabIndex={0} className="fs-back" onClick={(e) => { e.stopPropagation(); onClose(); }}>‹ Back</button>
 
         {/* Prev / Next */}
         {hasPrev && (
-          <button className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onPrev?.(); }} title="Previous channel (←)">⏮</button>
+          <button tabIndex={0} className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onPrev?.(); }} title="Previous channel (←)">⏮</button>
         )}
         {hasNext && (
-          <button className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onNext?.(); }} title="Next channel (→)">⏭</button>
+          <button tabIndex={0} className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onNext?.(); }} title="Next channel (→)">⏭</button>
         )}
 
         {/* Play / Pause */}
         <button
+          tabIndex={0}
           className="fs-playpause"
           onClick={(e) => { e.stopPropagation(); togglePlayPause(); }}
           title={isPaused ? 'Play (Space)' : 'Pause (Space)'}
@@ -488,6 +536,13 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         <div className="fs-brand"><span className="wm-ibk">IBK</span><span className="wm-tv">TV</span></div>
       </div>
 
+      {/* Broadcast message banner */}
+      {showBroadcast && (
+        <div className="broadcast-banner">
+          {BROADCAST_MESSAGES[broadcastMsg]}
+        </div>
+      )}
+
       {/* Persistent IBK TV watermark */}
       <div className="ibk-bug" aria-hidden="true">
         <span className="ibk-bug-ibk">IBK</span><span className="ibk-bug-tv">TV</span>
@@ -529,8 +584,8 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
               ? 'Stream loaded but segments failed. Check your connection.'
               : errMsg || 'This channel may be temporarily offline.'}
           </small>
-          <button className="retry-btn" onClick={() => setRetryKey((k) => k + 1)}>↺ Retry</button>
-          <button className="retry-btn back-btn" onClick={onClose}>‹ Go Back</button>
+          <button tabIndex={0} className="retry-btn" onClick={() => setRetryKey((k) => k + 1)}>↺ Retry</button>
+          <button tabIndex={0} className="retry-btn back-btn" onClick={onClose}>‹ Go Back</button>
         </div>
       )}
 

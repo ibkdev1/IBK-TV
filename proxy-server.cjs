@@ -16,11 +16,11 @@ const PORT = process.env.PORT || 3001;
 // ─────────────────────────────────────────────────────────────────────────────
 const httpAgent  = new http.Agent ({
   keepAlive: true, maxSockets: 6, maxFreeSockets: 2,
-  timeout: 20000, scheduling: 'lifo',
+  timeout: 10000, scheduling: 'lifo',
 });
 const httpsAgent = new https.Agent({
   keepAlive: true, maxSockets: 6, maxFreeSockets: 2,
-  timeout: 20000, scheduling: 'lifo',
+  timeout: 10000, scheduling: 'lifo',
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -28,8 +28,9 @@ const httpsAgent = new https.Agent({
 //    TS segments are immutable — once fetched, serve instantly from RAM.
 //    200 slots × ~500 KB avg = ~100 MB, stays within Railway free tier limits.
 // ─────────────────────────────────────────────────────────────────────────────
-const LRU_MAX = 60;
+const LRU_MAX = 30;
 const SEG_TTL = 60_000; // 60 s
+const SEG_MAX_BYTES = 1.5 * 1024 * 1024; // skip caching segments > 1.5 MB
 
 class LRUCache {
   constructor(max) {
@@ -137,7 +138,7 @@ function rawFetch(targetUrl, extraHeaders = {}) {
     };
     const req = mod.get(opts, resolve);
     req.on('error', reject);
-    req.setTimeout(20000, () => { req.destroy(); reject(new Error('Timeout')); });
+    req.setTimeout(10000, () => { req.destroy(); reject(new Error('Timeout')); });
   });
 }
 
@@ -255,7 +256,7 @@ app.get('/stream', rateLimit, async (req, res) => {
         upstream.on('end', () => {
           res.end();
           const data = Buffer.concat(chunks);
-          segCache.set(targetUrl, data, ct);
+          if (data.length <= SEG_MAX_BYTES) segCache.set(targetUrl, data, ct);
           resolve({ data, ct });
         });
         upstream.on('error', err => {

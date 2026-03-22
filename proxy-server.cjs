@@ -64,6 +64,32 @@ const segCache = new LRUCache(LRU_MAX);
 const PLAYLIST_TTL = 10_000; // 10 s
 const playlistCache = new Map(); // url → { rewritten, body, finalUrl, ts }
 
+// Purge stale playlist entries every 60s to prevent memory leak
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of playlistCache) {
+    if (now - v.ts > PLAYLIST_TTL * 2) playlistCache.delete(k);
+  }
+}, 60_000);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RATE LIMITER — max 120 requests/min per IP to prevent abuse
+// ─────────────────────────────────────────────────────────────────────────────
+const rateMap = new Map(); // ip → { count, resetAt }
+setInterval(() => rateMap.clear(), 60_000);
+function rateLimit(req, res, next) {
+  const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
+  const now = Date.now();
+  let entry = rateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    entry = { count: 0, resetAt: now + 60_000 };
+    rateMap.set(ip, entry);
+  }
+  entry.count++;
+  if (entry.count > 120) return res.status(429).send('Too Many Requests');
+  next();
+}
+
 function gzipSend(req, res, text) {
   const ae = req.headers['accept-encoding'] || '';
   if (ae.includes('gzip')) {
@@ -180,7 +206,7 @@ if (fs.existsSync(distDir)) {
 // ─────────────────────────────────────────────────────────────────────────────
 // PROXY ENDPOINT
 // ─────────────────────────────────────────────────────────────────────────────
-app.get('/stream', async (req, res) => {
+app.get('/stream', rateLimit, async (req, res) => {
   const targetUrl = decodeURIComponent(req.query.url || '');
   if (!targetUrl) return res.status(400).json({ error: 'Missing ?url=' });
 

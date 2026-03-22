@@ -26,6 +26,7 @@ const categoryIcons: Record<string, string> = {
   Togo: '🇹🇬',
   Arabic: '🕌',
   Canada: '🇨🇦',
+  Sports: '⚽',
 };
 
 function loadFavorites(): Set<string> {

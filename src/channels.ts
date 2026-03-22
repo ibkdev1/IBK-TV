@@ -50,7 +50,7 @@ export function proxyUrl(rawUrl: string, referer?: string, direct?: boolean): st
 }
 
 export const categories = [
-  'All', 'Favorites', 'Mali', 'US', 'News', 'France', 'Canada', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Burkina Faso', 'Cameroun', 'Benin', 'Togo', 'Arabic', 'Animals', 'Kids',
+  'All', 'Favorites', 'Mali', 'US', 'Sports', 'News', 'France', 'Canada', "Côte d'Ivoire", 'Niger', 'Sénégal', 'Guinée', 'Morocco', 'Congo', 'Burkina Faso', 'Cameroun', 'Benin', 'Togo', 'Arabic', 'Animals', 'Kids',
 ];
 
 export const channels: Channel[] = [
@@ -273,6 +273,46 @@ export const channels: Channel[] = [
     streamUrl: 'https://livestream.pbskids.org/out/v1/14507d931bbe48a69287e4850e53443c/est.m3u8',
     category: 'Kids',
     country: 'United States',
+    language: 'English',
+  },
+
+  // ══════════════════════════════════════════════
+  //  ⚽  SPORTS
+  // ══════════════════════════════════════════════
+  {
+    id: 'tudn',
+    name: 'TUDN',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/TUDN_logo.svg/120px-TUDN_logo.svg.png',
+    streamUrl: 'https://streaming-live-fcdn.api.prd.univisionnow.com/tudn/tudn.isml/hls/tudn.m3u8',
+    category: 'Sports',
+    country: 'United States',
+    language: 'Spanish',
+  },
+  {
+    id: 'espn-deportes',
+    name: 'ESPN Deportes',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/ESPN_Deportes_logo.svg/120px-ESPN_Deportes_logo.svg.png',
+    streamUrl: 'https://e3.thetvapp.to/hls/espn-deportes/index.m3u8',
+    category: 'Sports',
+    country: 'United States',
+    language: 'Spanish',
+  },
+  {
+    id: 'talksport',
+    name: 'talkSPORT',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/TalkSPORT_logo.svg/120px-TalkSPORT_logo.svg.png',
+    streamUrl: 'https://af7a8b4e.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/TEctZ2JfdGFsa1NQT1JUX0hMUw/playlist.m3u8',
+    category: 'Sports',
+    country: 'United Kingdom',
+    language: 'English',
+  },
+  {
+    id: 'mutv',
+    name: 'MUTV',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/MUTV_logo.svg/120px-MUTV_logo.svg.png',
+    streamUrl: 'https://bcovlive-a.akamaihd.net/r2d2c4ca5bf57456fb1d16255c1a535c8/eu-west-1/6058004203001/playlist.m3u8',
+    category: 'Sports',
+    country: 'United Kingdom',
     language: 'English',
   },
 

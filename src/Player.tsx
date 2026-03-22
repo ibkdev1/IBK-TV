@@ -46,7 +46,6 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const [showSleepPicker, setShowSleepPicker] = useState(false);
   const [isPip, setIsPip] = useState(false);
   const BROADCAST_MESSAGES = [
-    '🇲🇱 Support Mali & the AES Alliance — Unity is Strength!',
     '📺 Enjoying IBK TV? Share it with friends and family!',
     '🌍 IBK TV — Free African & World TV, always live!',
   ];
@@ -56,7 +55,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const broadcastIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const broadcastMsgIndexRef = useRef(0);
 
-  // Show rotating broadcast messages: first at 30s, then every 15 minutes, shows for 20 seconds
+  // Show rotating broadcast messages: first at 10s, then every 5 minutes, shows for 20 seconds
   useEffect(() => {
     if (!channel) return;
     setShowBroadcast(false);

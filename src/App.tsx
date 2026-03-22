@@ -96,6 +96,7 @@ export default function App() {
   const dragCat = useRef<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const catRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const gridRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -388,6 +389,13 @@ export default function App() {
     }
   }, [focusedCat, zone]);
 
+  // Auto-scroll focused channel card into view
+  useEffect(() => {
+    if (zone === 'grid') {
+      cardRefs.current[focusedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }, [focusedIndex, zone]);
+
   // Show prayer popup for 3s whenever a channel is opened
   useEffect(() => {
     if (selectedChannel) {
@@ -543,6 +551,7 @@ export default function App() {
         {gridReady && filtered.map((ch, idx) => (
           <div
             key={ch.id}
+            ref={(el) => { cardRefs.current[idx] = el; }}
             className={`channel-card ${idx === focusedIndex && zone === 'grid' ? 'focused' : ''} ${brokenIds.has(ch.id) ? 'channel-card--broken' : ''}`}
             onClick={() => { saveRecent(ch); setRecent(loadRecent()); setSelectedChannel(ch); }}
             onMouseEnter={() => { setFocusedIndex(idx); setZone('grid'); }}

@@ -72,7 +72,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     broadcastTimerRef.current = setTimeout(() => {
       show();
       broadcastIntervalRef.current = setInterval(show, 5 * 60 * 1000);
-    }, 30_000);
+    }, 10_000);
     return () => {
       if (broadcastTimerRef.current) clearTimeout(broadcastTimerRef.current);
       if (broadcastIntervalRef.current) clearInterval(broadcastIntervalRef.current);

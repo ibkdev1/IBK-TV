@@ -46,6 +46,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const [showSleepPicker, setShowSleepPicker] = useState(false);
   const [isPip, setIsPip] = useState(false);
   const BROADCAST_MESSAGES = [
+    '🇲🇱 Support Mali & the AES Alliance — Unity is Strength!',
     '📺 Enjoying IBK TV? Share it with friends and family!',
     '🌍 IBK TV — Free African & World TV, always live!',
   ];

@@ -189,6 +189,13 @@
 }
 
 
+/* ── STICKY TOP (header + categories) ───────────────────────── */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
 /* ── HEADER ──────────────────────────────────────────────────── */
 .header {
   display: flex;
@@ -197,9 +204,6 @@
   padding: 0.75rem 2rem;
   background: linear-gradient(180deg, #030308 0%, #07070e 100%);
   border-bottom: 1px solid rgba(229,9,20,0.18);
-  position: sticky;
-  top: 0;
-  z-index: 100;
   box-shadow: 0 1px 0 rgba(229,9,20,0.08), 0 4px 40px rgba(0,0,0,0.8);
 }
 

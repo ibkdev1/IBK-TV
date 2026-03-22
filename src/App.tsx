@@ -421,6 +421,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <div className="sticky-top">
       <header className="header">
         <div className="brand">
           <div className="brand-flag" aria-label="Mali flag" />
@@ -473,6 +474,7 @@ export default function App() {
           </button>
         ))}
       </nav>
+      </div>
       </div>
 
       <div className="count-bar">

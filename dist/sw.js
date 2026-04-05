@@ -1,5 +1,5 @@
 // IBK-TV Service Worker — cache-first for app shell, network-only for streams
-const CACHE = 'ibktv-shell-v3';
+const CACHE = 'ibktv-shell-v5';
 const SHELL = ['/', '/index.html'];
 
 // On install: cache the app shell immediately

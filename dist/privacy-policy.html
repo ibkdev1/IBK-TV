@@ -5,44 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IBK TV – Privacy Policy</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; line-height: 1.7; }
-    h1 { color: #1a1a2e; }
-    h2 { color: #16213e; margin-top: 30px; }
-    a { color: #0f3460; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; color: #222; line-height: 1.8; background: #fff; }
+    header { border-bottom: 3px solid #e5091a; padding-bottom: 24px; margin-bottom: 36px; }
+    header h1 { font-size: 2rem; color: #0a0a0f; letter-spacing: -0.5px; }
+    header h1 span { color: #e5091a; }
+    .meta { margin-top: 8px; color: #666; font-size: 0.92rem; }
+    h2 { font-size: 1.1rem; color: #0a0a0f; margin: 36px 0 10px; padding-left: 12px; border-left: 4px solid #e5091a; }
+    p { margin-bottom: 12px; color: #333; }
+    ul { margin: 8px 0 12px 24px; }
+    ul li { margin-bottom: 6px; color: #333; }
+    .highlight { background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 16px 20px; margin: 12px 0; }
+    a { color: #e5091a; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #eee; color: #999; font-size: 0.85rem; text-align: center; }
+    .badge { display: inline-block; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-size: 0.82rem; padding: 3px 10px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
   </style>
 </head>
 <body>
-  <h1>IBK TV – Privacy Policy</h1>
-  <p><strong>Last updated:</strong> March 8, 2026</p>
+  <header>
+    <h1><span>IBK</span> TV — Privacy Policy</h1>
+    <div class="meta">
+      <strong>Effective date:</strong> March 29, 2026 &nbsp;|&nbsp;
+      <strong>Version:</strong> 2.0 &nbsp;
+      <span class="badge">Google Play Compliant</span>
+    </div>
+  </header>
 
-  <p>IBK TV ("we", "our", or "the app") is a free live streaming application providing access to West African television channels. This privacy policy explains how we handle your information.</p>
+  <p>IBK TV ("we", "us", or "the Application") is a free live television streaming application available on Android TV, Fire TV, and the web. This Privacy Policy describes how we handle information in connection with your use of IBK TV. We are committed to protecting your privacy and being transparent about our practices.</p>
 
   <h2>1. Information We Collect</h2>
-  <p>IBK TV does <strong>not</strong> collect, store, or share any personal information. Specifically:</p>
+  <div class="highlight">
+    <strong>IBK TV does not collect, transmit, or store any personal information.</strong>
+  </div>
+  <p>Specifically, IBK TV does <strong>not</strong> collect:</p>
   <ul>
-    <li>No account or registration is required</li>
-    <li>No name, email, or contact information is collected</li>
-    <li>No location data is collected</li>
-    <li>No usage analytics or tracking is performed</li>
-    <li>No advertising SDKs are used</li>
+    <li>Names, email addresses, or any contact information</li>
+    <li>Device identifiers, advertising IDs, or hardware information</li>
+    <li>Location data (GPS, IP-based, or otherwise)</li>
+    <li>Usage analytics, crash reports, or behavioral data</li>
+    <li>Browsing history or search queries</li>
+    <li>Financial or payment information</li>
   </ul>
+  <p>No account, registration, or sign-in is required to use IBK TV.</p>
 
-  <h2>2. Local Storage</h2>
-  <p>The app saves your <strong>favorite channels</strong> and <strong>recently watched channels</strong> locally on your device only. This data never leaves your device and is not transmitted to any server.</p>
+  <h2>2. Data Stored Locally on Your Device</h2>
+  <p>IBK TV uses your device's local storage (localStorage / SharedPreferences) to save:</p>
+  <ul>
+    <li>Your favorite channels</li>
+    <li>Recently watched channels</li>
+    <li>Your preferred category order</li>
+  </ul>
+  <p>This data is stored <strong>exclusively on your device</strong>. It is never transmitted to our servers or any third party, and is deleted when you uninstall the application.</p>
 
-  <h2>3. Third-Party Streams</h2>
-  <p>IBK TV plays live video streams from third-party broadcasters. When you watch a channel, your device connects directly to the broadcaster's streaming server. We do not control and are not responsible for the privacy practices of those third-party servers.</p>
+  <h2>3. Internet Access and Streaming</h2>
+  <p>IBK TV requires internet access to load and play live television streams. When you select a channel, your device may connect to:</p>
+  <ul>
+    <li>IBK TV's proxy server (used to relay streams that require CORS handling)</li>
+    <li>Third-party broadcast servers operated by the respective broadcasters</li>
+  </ul>
+  <p>IBK TV's proxy server does not log, store, or process any personal data. It functions solely as a technical relay to deliver video content to your device.</p>
 
-  <h2>4. Internet Permission</h2>
-  <p>The app requires internet access solely to load and play live television streams. No other network communication occurs.</p>
+  <h2>4. Third-Party Content and Services</h2>
+  <p>IBK TV aggregates publicly available live television streams from independent broadcasters. We do not control the content, privacy practices, or data handling of those third-party streaming servers. We encourage you to review the privacy policies of the broadcasters whose content you access.</p>
 
-  <h2>5. Children's Privacy</h2>
-  <p>IBK TV is intended for general audiences and does not target children under 13. We do not knowingly collect any information from children.</p>
+  <h2>5. Permissions Used</h2>
+  <ul>
+    <li><strong>INTERNET</strong> — Required to stream live television content.</li>
+    <li><strong>ACCESS_NETWORK_STATE</strong> — Used to detect connectivity status and display an offline notice.</li>
+  </ul>
+  <p>No other device permissions are requested or used.</p>
 
-  <h2>6. Changes to This Policy</h2>
-  <p>If we make changes to this policy, we will update the "Last updated" date at the top of this page.</p>
+  <h2>6. Children's Privacy</h2>
+  <p>IBK TV is intended for a general audience and is <strong>not directed at children under the age of 13</strong>. We do not knowingly collect any personal information from children. If you believe a child has provided personal information through the app, please contact us and we will promptly address the matter.</p>
 
-  <h2>7. Contact</h2>
-  <p>If you have any questions about this privacy policy, contact us at: <a href="mailto:ibktv.app@gmail.com">ibktv.app@gmail.com</a></p>
+  <h2>7. Advertising</h2>
+  <p>IBK TV does not display advertisements and does not integrate any advertising SDKs or third-party tracking libraries.</p>
+
+  <h2>8. Data Security</h2>
+  <p>Since IBK TV does not collect or transmit personal data, there is no personal data at risk. The application does not maintain user accounts, databases, or any backend storage of user information.</p>
+
+  <h2>9. Changes to This Privacy Policy</h2>
+  <p>We may update this Privacy Policy from time to time. Any changes will be reflected by updating the "Effective date" at the top of this page. We encourage you to review this policy periodically. Continued use of the application after changes are posted constitutes acceptance of the updated policy.</p>
+
+  <h2>10. Contact Us</h2>
+  <p>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at:</p>
+  <p><strong>Email:</strong> <a href="mailto:keibk@protonmail.com">keibk@protonmail.com</a></p>
+
+  <footer>
+    &copy; 2026 IBK TV. All rights reserved. &nbsp;|&nbsp;
+    <a href="/">Back to IBK TV</a>
+  </footer>
 </body>
 </html>

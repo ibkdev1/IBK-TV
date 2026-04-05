@@ -582,6 +582,7 @@
   transition: transform 0.25s ease, filter 0.25s ease;
   position: relative;
   z-index: 1;
+  mix-blend-mode: screen;
 }
 
 .card-logo-fallback {
@@ -617,8 +618,14 @@
 }
 
 .cat-tag {
-  font-size: 0.69rem;
-  color: rgba(255,255,255,0.35);
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(229,9,20,0.75);
+  border-radius: 4px;
+  padding: 1px 5px;
+  letter-spacing: 0.03em;
 }
 
 .card-country {

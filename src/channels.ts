@@ -76,7 +76,7 @@ export const channels: Channel[] = [
   {
     id: 'fox-weather',
     name: 'Fox Weather',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Fox_Weather_logo.svg/120px-Fox_Weather_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Fox_Weather_logo.svg/120px-Fox_Weather_logo.svg.png',
     streamUrl: 'https://247wlive.foxweather.com/stream/index.m3u8',
     category: 'US',
     country: 'United States',
@@ -85,7 +85,7 @@ export const channels: Channel[] = [
   {
     id: 'cbs-news',
     name: 'CBS News',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/CBS_News_logo_%282022%29.svg/120px-CBS_News_logo_%282022%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/CBS_News_2020_%28Stacked_II%29.svg/120px-CBS_News_2020_%28Stacked_II%29.svg.png',
     streamUrl: 'https://cbsn-us.cbsnstream.cbsnews.com/out/v1/55a8648e8f134e82a470f83d562deeca/master.m3u8',
     backupUrl: 'https://cbsnews.akamaized.net/hls/live/2020607/cbsnlineup_8/master.m3u8',
     category: 'US',
@@ -95,7 +95,7 @@ export const channels: Channel[] = [
   {
     id: 'byutv',
     name: 'BYUtv',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/BYUtv_logo.svg/120px-BYUtv_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/BYUtv_logo.svg/120px-BYUtv_logo.svg.png',
     streamUrl: 'https://d13j8jpstr8iqz.cloudfront.net/BYUtv.m3u8',
     category: 'US',
     country: 'United States',
@@ -104,7 +104,7 @@ export const channels: Channel[] = [
   {
     id: 'bounce-tv',
     name: 'Bounce TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Bounce_TV_logo.svg/120px-Bounce_TV_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Bounce_TV_logo.svg/120px-Bounce_TV_logo.svg.png',
     streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01438-ewscrippscompan-bouncexl-tablo/playlist.m3u8',
     category: 'US',
     country: 'United States',
@@ -113,7 +113,7 @@ export const channels: Channel[] = [
   {
     id: 'ion-plus',
     name: 'ION Plus',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Ion_Plus_logo.svg/120px-Ion_Plus_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/ION_Plus_logo.svg/120px-ION_Plus_logo.svg.png',
     streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01438-ewscrippscompan-ionplus-tablo/playlist.m3u8',
     category: 'US',
     country: 'United States',
@@ -122,7 +122,7 @@ export const channels: Channel[] = [
   {
     id: 'grit-tv',
     name: 'Grit Xtra',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Grit_TV_logo.svg/120px-Grit_TV_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01438-ewscrippscompan-gritxtra-tablo/playlist.m3u8',
     category: 'US',
     country: 'United States',
@@ -131,7 +131,7 @@ export const channels: Channel[] = [
   {
     id: 'charge-tv',
     name: 'Charge!',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Charge%21_logo.svg/120px-Charge%21_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Charge%21_Logo_2020.svg/120px-Charge%21_Logo_2020.svg.png',
     streamUrl: 'https://fast-channels.sinclairstoryline.com/CHARGE/index.m3u8',
     category: 'US',
     country: 'United States',
@@ -140,7 +140,7 @@ export const channels: Channel[] = [
   {
     id: 'comet-tv',
     name: 'Comet TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Comet_TV_logo.svg/120px-Comet_TV_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Comet_TV_2015_logo.svg/120px-Comet_TV_2015_logo.svg.png',
     streamUrl: 'https://fast-channels.sinclairstoryline.com/COMET/index.m3u8',
     category: 'US',
     country: 'United States',
@@ -208,7 +208,7 @@ export const channels: Channel[] = [
   {
     id: 'alhadath',
     name: 'الحدث',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Al_Hadath_Logo.svg/120px-Al_Hadath_Logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Al_Hadath_TV_logo_2023.svg/120px-Al_Hadath_TV_logo_2023.svg.png',
     streamUrl: 'https://svs.itworkscdn.net/alhadathlive/alhadath.smil/playlist.m3u8',
     category: 'Saudi Arabia',
     country: 'Saudi Arabia',
@@ -292,7 +292,7 @@ export const channels: Channel[] = [
   {
     id: 'red-bull-tv',
     name: 'Red Bull TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Red_Bull_TV_Logo.svg/120px-Red_Bull_TV_Logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8',
     category: 'Sports',
     country: 'International',
@@ -301,7 +301,7 @@ export const channels: Channel[] = [
   {
     id: 'ftf-sports',
     name: 'FTF Sports',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://1657061170.rsc.cdn77.org/HLS/FTF-LINEAR.m3u8',
     direct: true,
     category: 'Sports',
@@ -311,7 +311,7 @@ export const channels: Channel[] = [
   {
     id: 'tvs-sports',
     name: 'TVS Sports',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://rpn.bozztv.com/gusa/gusa-tvssports/index.m3u8',
     category: 'Sports',
     country: 'United States',
@@ -320,7 +320,7 @@ export const channels: Channel[] = [
   {
     id: 'tvs-classic-sports',
     name: 'TVS Classic Sports',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://rpn.bozztv.com/gusa/gusa-tvs/index.m3u8',
     category: 'Sports',
     country: 'United States',
@@ -329,7 +329,7 @@ export const channels: Channel[] = [
   {
     id: 'tvs-women-sports',
     name: 'TVS Women Sports',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://rpn.bozztv.com/gusa/gusa-tvswsn/index.m3u8',
     category: 'Sports',
     country: 'United States',
@@ -338,7 +338,7 @@ export const channels: Channel[] = [
   {
     id: 'tvs-sports-bureau',
     name: 'TVS Sports Bureau',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://rpn.bozztv.com/gusa/gusa-tvssportsbureau/index.m3u8',
     category: 'Sports',
     country: 'United States',
@@ -347,7 +347,7 @@ export const channels: Channel[] = [
   {
     id: 'tudn',
     name: 'TUDN',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/TUDN_logo.svg/120px-TUDN_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/TUDN_Logo.svg/120px-TUDN_Logo.svg.png',
     streamUrl: 'https://streaming-live-fcdn.api.prd.univisionnow.com/tudn/tudn.isml/hls/tudn.m3u8',
     category: 'Sports',
     country: 'United States',
@@ -380,7 +380,7 @@ export const channels: Channel[] = [
   {
     id: 'africable',
     name: 'Africable TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/9/9c/Africable_logo.png/120px-Africable_logo.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Africable_T%C3%A9l%C3%A9vision_logo.jpg/120px-Africable_T%C3%A9l%C3%A9vision_logo.jpg',
     streamUrl: 'http://69.64.57.208/africable/playlist.m3u8',
     backupUrl:  'http://69.64.57.208/africable/playlist.m3u8',
     category: 'Mali',
@@ -390,7 +390,7 @@ export const channels: Channel[] = [
   {
     id: 'nieta-tv',
     name: 'Niéta TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'http://69.64.57.208/nieta/playlist.m3u8',
     backupUrl:  'http://69.64.57.208/nieta/playlist.m3u8',
     category: 'Mali',
@@ -400,7 +400,7 @@ export const channels: Channel[] = [
   {
     id: 'tm1-tv',
     name: 'TM1 TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'http://69.64.57.208/tm1/playlist.m3u8',
     backupUrl:  'http://69.64.57.208/tm1/playlist.m3u8',
     category: 'Mali',
@@ -410,7 +410,7 @@ export const channels: Channel[] = [
   {
     id: 'cherifla-tv',
     name: 'Cherifla TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_Mali.svg/60px-Flag_of_Mali.svg.png',
     streamUrl: 'http://69.64.57.208/cherifla/playlist.m3u8',
     backupUrl:  'http://69.64.57.208/cherifla/playlist.m3u8',
     category: 'Mali',
@@ -631,7 +631,7 @@ export const channels: Channel[] = [
   {
     id: 'tf1',
     name: 'TF1',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/sixty/TF1_logo_2013.svg/120px-TF1_logo_2013.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Logo_TF1_2013.svg/120px-Logo_TF1_2013.svg.png',
     streamUrl: 'https://hls.tf1.fr/hls/live/2037221/tf1/index.m3u8',
     category: 'France',
     country: 'France',
@@ -640,7 +640,7 @@ export const channels: Channel[] = [
   {
     id: 'france2',
     name: 'France 2',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/France_2_logo_2008.svg/120px-France_2_logo_2008.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/France_2_logo.svg/120px-France_2_logo.svg.png',
     streamUrl: 'http://69.64.57.208/france2/playlist.m3u8',
     category: 'France',
     country: 'France',
@@ -649,7 +649,7 @@ export const channels: Channel[] = [
   {
     id: 'tv5monde',
     name: 'TV5Monde Afrique',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/TV5MONDE_logo_2019.svg/120px-TV5MONDE_logo_2019.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/TV5Monde_Logo.svg/120px-TV5Monde_Logo.svg.png',
     streamUrl: 'https://liveh12.vtvprime.vn/hls/TV5/03.m3u8',
     backupUrl: 'https://ott.tv5monde.com/Content/HLS/Live/channel(afrique)/variant.m3u8',
     category: 'France',
@@ -659,7 +659,7 @@ export const channels: Channel[] = [
   {
     id: 'france24-fr',
     name: 'France 24 Français',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/France_24_logo_%282011%29.svg/120px-France_24_logo_%282011%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/France_24_logo_%282013%29.svg/120px-France_24_logo_%282013%29.svg.png',
     streamUrl: 'https://live.france24.com/hls/live/2037179-b/F24_FR_HI_HLS/master_2300.m3u8',
     category: 'France',
     country: 'France',
@@ -668,7 +668,7 @@ export const channels: Channel[] = [
   {
     id: 'france24-en',
     name: 'France 24 English',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/France_24_logo_%282011%29.svg/120px-France_24_logo_%282011%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/France_24_logo_%282013%29.svg/120px-France_24_logo_%282013%29.svg.png',
     streamUrl: 'https://live.france24.com/hls/live/2037218-b/F24_EN_HI_HLS/master_2300.m3u8',
     category: 'France',
     country: 'France',
@@ -678,7 +678,7 @@ export const channels: Channel[] = [
   {
     id: 'france5',
     name: 'France 5',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/२a/France_5_logo_2002.svg/120px-France_5_logo_2002.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/La_Cinqui%C3%A8me_1999.svg/120px-La_Cinqui%C3%A8me_1999.svg.png',
     streamUrl: 'http://69.64.57.208/france5/playlist.m3u8',
     category: 'France',
     country: 'France',
@@ -705,7 +705,7 @@ export const channels: Channel[] = [
   {
     id: 'africa24-sport',
     name: 'Africa 24 Sport',
-    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1e/Africa_24_Logo.svg/120px-Africa_24_Logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/6/6a/Logo_Africa_24.jpg/120px-Logo_Africa_24.jpg',
     streamUrl: 'https://africa24.vedge.infomaniak.com/livecast/ik:africa24sport/manifest.m3u8',
     category: 'France',
     country: 'Afrique',
@@ -736,7 +736,7 @@ export const channels: Channel[] = [
   {
     id: 'trt-world',
     name: 'TRT World',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/TRT_World_logo.svg/120px-TRT_World_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/TRT_World_logo.svg/120px-TRT_World_logo.svg.png',
     streamUrl: 'https://tv-trtworld.medya.trt.com.tr/master.m3u8',
     category: 'News',
     country: 'Turkey',
@@ -745,7 +745,7 @@ export const channels: Channel[] = [
   {
     id: 'aljazeera',
     name: 'Al Jazeera English',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Al_Jazeera_Logo.svg/120px-Al_Jazeera_Logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Aljazeera_eng.svg/120px-Aljazeera_eng.svg.png',
     streamUrl: 'https://live-hls-apps-aje.getaj.net/AJE/index.m3u8',
     category: 'News',
     country: 'International',
@@ -754,7 +754,7 @@ export const channels: Channel[] = [
   {
     id: 'africa24-fr',
     name: 'Africa24 FR',
-    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1e/Africa_24_Logo.svg/120px-Africa_24_Logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/6/6a/Logo_Africa_24.jpg/120px-Logo_Africa_24.jpg',
     streamUrl: 'https://africa24.vedge.infomaniak.com/livecast/ik:africa24/manifest.m3u8',
     category: 'News',
     country: 'Afrique',
@@ -763,7 +763,7 @@ export const channels: Channel[] = [
   {
     id: 'africa24-en',
     name: 'Africa24 EN',
-    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1e/Africa_24_Logo.svg/120px-Africa_24_Logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/6/6a/Logo_Africa_24.jpg/120px-Logo_Africa_24.jpg',
     streamUrl: 'https://edge20.vedge.infomaniak.com/livecast/ik:africa24english/manifest.m3u8',
     category: 'News',
     country: 'Afrique',
@@ -781,7 +781,7 @@ export const channels: Channel[] = [
   {
     id: 'sky-news-au',
     name: 'Sky News Australia',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Sky_News_Australia_2020.svg/120px-Sky_News_Australia_2020.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/15/Former_Sky_News_Australia_logo.png/120px-Former_Sky_News_Australia_logo.png',
     streamUrl: 'https://skynewsau-live.akamaized.net/hls/live/2002691/skynewsau-extra3/master.m3u8',
     category: 'News',
     country: 'Australia',
@@ -928,7 +928,7 @@ export const channels: Channel[] = [
   {
     id: 'citynews-toronto',
     name: 'CityNews Toronto',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
     streamUrl: 'https://citynewsregional.akamaized.net/hls/live/1024052/Regional_Live_7/master.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -937,7 +937,7 @@ export const channels: Channel[] = [
   {
     id: 'citynews-calgary',
     name: 'CityNews Calgary',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
     streamUrl: 'https://citynewsregional.akamaized.net/hls/live/1024053/Regional_Live_8/master.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -946,7 +946,7 @@ export const channels: Channel[] = [
   {
     id: 'citynews-vancouver',
     name: 'CityNews Vancouver',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/CityNews_logo.svg/120px-CityNews_logo.svg.png',
     streamUrl: 'https://citynewsregional.akamaized.net/hls/live/1024054/Regional_Live_9/master.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -955,7 +955,7 @@ export const channels: Channel[] = [
   {
     id: 'ici-rdi',
     name: 'ICI RDI',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/ICI_RDI.svg/120px-ICI_RDI.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/ICI_RDI_logo.svg/120px-ICI_RDI_logo.svg.png',
     streamUrl: 'https://rcavlive.akamaized.net/hls/live/704025/xcanrdi/master.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -964,7 +964,7 @@ export const channels: Channel[] = [
   {
     id: 'ici-montreal',
     name: 'ICI Montréal',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Ici_Radio-Canada_T%C3%A9l%C3%A9.svg/120px-Ici_Radio-Canada_T%C3%A9l%C3%A9.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/CBC_Radio-Canada_logo.svg/120px-CBC_Radio-Canada_logo.svg.png',
     streamUrl: 'https://amdici.akamaized.net/hls/live/873426/ICI-Live-Stream/master.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -973,7 +973,7 @@ export const channels: Channel[] = [
   {
     id: 'ntd-canada',
     name: 'NTD Canada',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/NTD_Television_logo.svg/120px-NTD_Television_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/NTD_Logo_with_symbol.svg/120px-NTD_Logo_with_symbol.svg.png',
     streamUrl: 'https://live.ntdtv.com/mllive860/playlist.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -982,7 +982,7 @@ export const channels: Channel[] = [
   {
     id: 'tsn-the-ocho',
     name: 'TSN The Ocho',
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/TSN_Logo_2018.svg/120px-TSN_Logo_2018.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/TSN_logo_%28original%29.svg/120px-TSN_logo_%28original%29.svg.png',
     streamUrl: 'https://d3pnbvng3bx2nj.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-rds8g35qfqrnv/TSN_The_Ocho.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -991,7 +991,7 @@ export const channels: Channel[] = [
   {
     id: 'willow-sports',
     name: 'Willow Sports',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Willow_TV_logo.svg/120px-Willow_TV_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/60px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png',
     streamUrl: 'https://d36r8jifhgsk5j.cloudfront.net/Willow_TV.m3u8',
     category: 'Canada',
     country: 'Canada',
@@ -1091,7 +1091,7 @@ export const channels: Channel[] = [
   {
     id: 'aljazeera-arabic',
     name: 'Al Jazeera عربي',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Al_Jazeera_channel_logo.svg/120px-Al_Jazeera_channel_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Aljazeera_eng.svg/120px-Aljazeera_eng.svg.png',
     streamUrl: 'https://live-hls-aje-ak.getaj.net/AJE/03.m3u8',
     referer: 'https://www.aljazeera.com/',
     category: 'Arabic',

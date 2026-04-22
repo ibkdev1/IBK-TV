@@ -39,18 +39,24 @@ const DIRECT_DOMAINS = [
   'infomaniak.com',
 ];
 
+// Domains requiring a French IP — routed through Paris Lambda via /stream-fr
+const FRENCH_DOMAINS = [
+  'tf1.fr', 'hls.tf1.fr', 'stream-live.tf1.fr',
+  'm6.fr',  'hls.m6.fr',
+  'arte.tv',
+  'france.tv', 'hls.francetv.fr',
+];
+
 export function proxyUrl(rawUrl: string, referer?: string, direct?: boolean): string {
-  // Channels with referer headers always need proxy
   if (referer) {
-    let url = `/stream?url=${encodeURIComponent(rawUrl)}`;
-    url += `&referer=${encodeURIComponent(referer)}`;
-    return url;
+    return `/stream?url=${encodeURIComponent(rawUrl)}&referer=${encodeURIComponent(referer)}`;
   }
-  // Explicit direct flag
   if (direct) return rawUrl;
-  // Auto-detect CORS-friendly CDNs
   try {
     const hostname = new URL(rawUrl).hostname;
+    if (FRENCH_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d))) {
+      return `/stream-fr?url=${encodeURIComponent(rawUrl)}`;
+    }
     if (DIRECT_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d))) {
       return rawUrl;
     }

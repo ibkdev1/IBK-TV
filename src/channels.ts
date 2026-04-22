@@ -149,7 +149,7 @@ export const channels: Channel[] = [
   {
     id: 'court-tv',
     name: 'Court TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Court_TV_logo_%282019%29.svg/120px-Court_TV_logo_%282019%29.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f0/Court_TV_2019.svg/120px-Court_TV_2019.svg.png',
     streamUrl: 'https://amg01438-ewscrippscompan-courttv-tablo-nbcc7.amagi.tv/playlist/amg01438-ewscrippscompan-courttv-tablo/playlist.m3u8',
     category: 'US',
     country: 'United States',
@@ -158,7 +158,7 @@ export const channels: Channel[] = [
   {
     id: 'cspan',
     name: 'C-SPAN',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/C-SPAN_logo.svg/120px-C-SPAN_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/C-SPAN_Logo_%282019%29.svg/120px-C-SPAN_Logo_%282019%29.svg.png',
     streamUrl: 'https://547f72e6652371c3.mediapackage.us-east-1.amazonaws.com/out/v1/e3e6e29095844c4ba7d887f01e44a5ef/index.m3u8',
     category: 'US',
     country: 'United States',
@@ -176,7 +176,7 @@ export const channels: Channel[] = [
   {
     id: 'tbd-tv',
     name: 'TBD TV',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/C-SPAN_logo.svg/60px-C-SPAN_logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/C-SPAN_Logo_%282019%29.svg/60px-C-SPAN_Logo_%282019%29.svg.png',
     streamUrl: 'https://fast-channels.sinclairstoryline.com/TBD/index.m3u8',
     category: 'US',
     country: 'United States',
@@ -199,7 +199,7 @@ export const channels: Channel[] = [
   {
     id: 'alarabiya',
     name: 'العربية',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Al_Arabiya_Logo.svg/120px-Al_Arabiya_Logo.svg.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Al_Arabiya_-Logo_%281%29.png/120px-Al_Arabiya_-Logo_%281%29.png',
     streamUrl: 'https://svs.itworkscdn.net/alarabiyalive/alarabiya.smil/playlist.m3u8',
     category: 'Saudi Arabia',
     country: 'Saudi Arabia',

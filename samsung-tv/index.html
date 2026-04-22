@@ -31,21 +31,28 @@
     <div id="loading">Loading IBK TV...</div>
     <iframe
         id="app"
-        src="https://ibk-tv-production.up.railway.app"
+        src="https://dbamtwsny4dce.cloudfront.net"
         allowfullscreen
         onload="document.getElementById('loading').style.display='none'">
     </iframe>
     <script>
+        // Handle TV remote Back button
+        window.addEventListener('keydown', function(e) {
+            if (e.keyCode === 10009 || e.keyCode === 27) { // BACK or ESC
+                try { tizen.application.getCurrentApplication().exit(); } catch(err) {}
+            }
+        });
+
         // Fallback: redirect if iframe blocked
         setTimeout(function() {
             var frame = document.getElementById('app');
             try {
                 var doc = frame.contentDocument || frame.contentWindow.document;
                 if (!doc || doc.URL === 'about:blank') {
-                    window.location.href = 'https://ibk-tv-production.up.railway.app';
+                    window.location.href = 'https://dbamtwsny4dce.cloudfront.net';
                 }
             } catch(e) {
-                window.location.href = 'https://ibk-tv-production.up.railway.app';
+                window.location.href = 'https://dbamtwsny4dce.cloudfront.net';
             }
         }, 5000);
     </script>

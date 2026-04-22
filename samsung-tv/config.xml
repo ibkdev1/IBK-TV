@@ -23,5 +23,10 @@
                    install-location="auto"
                    hw-key-event="enable"/>
 
-    <tizen:profile name="tv"/>
+    <tizen:profile name="tv-samsung"/>
+
+    <access origin="https://ibk-tv-production.up.railway.app" subdomains="true"/>
+    <access origin="*" subdomains="true"/>
+
+    <tizen:metadata key="http://samsung.com/tv/metadata/multitasking.support" value="true"/>
 </widget>

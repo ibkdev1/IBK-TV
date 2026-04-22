@@ -1,6 +1,6 @@
 // IBK-TV Service Worker — cache-first for app shell, network-only for streams
-const CACHE = 'ibktv-shell-v3';
-const SHELL = ['/', '/index.html'];
+const CACHE = 'ibktv-shell-v6';
+const SHELL = ['/', '/index.html', '/icon-192.png', '/icon-512.png', '/manifest.json'];
 
 // On install: cache the app shell immediately
 self.addEventListener('install', (e) => {
@@ -39,10 +39,13 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // For HTML / navigation — network-first (get fresh app), fall back to cache
+  // For HTML / navigation — network-first with 4s timeout, fall back to cache
   if (e.request.mode === 'navigate') {
     e.respondWith(
-      fetch(e.request).catch(() => caches.match('/index.html'))
+      Promise.race([
+        fetch(e.request),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 4000)),
+      ]).catch(() => caches.match('/index.html'))
     );
     return;
   }

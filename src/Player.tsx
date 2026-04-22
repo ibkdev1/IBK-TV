@@ -12,8 +12,21 @@ interface PlayerProps {
   hasNext?: boolean;
 }
 
-const SLEEP_OPTIONS = [30, 60, 90] as const;
+const SLEEP_OPTIONS = [15, 30, 60, 90] as const;
+
+function formatSleep(secs: number): string {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
 const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+
+const BROADCAST_MESSAGES = [
+  '🇲🇱 Support Mali & the AES Alliance — Unity is Strength!',
+  '📺 Enjoying IBK TV? Share it with friends and family!',
+  '🇲🇱🇧🇫🇳🇪 AES — Africa Taking Back Its Destiny!',
+  '🥁 From the Sahel to the Sahara — African culture lives forever!',
+];
 
 export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasNext }: PlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -30,8 +43,10 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const hasStartedRef = useRef(false);
 
   const [status, setStatus] = useState<'loading' | 'playing' | 'error'>('loading');
+  const prevStatusRef = useRef<'loading' | 'playing' | 'error'>('loading');
   const [errMsg, setErrMsg] = useState('');
   const [retryKey, setRetryKey] = useState(0);
+  const [showRecovered, setShowRecovered] = useState(false);
   const [showBar, setShowBar] = useState(true);
   const [isFs, setIsFs] = useState(!!document.fullscreenElement);
   const [reported, setReported] = useState(false);
@@ -45,13 +60,10 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
   const [sleepRemaining, setSleepRemaining] = useState<number>(0);
   const [showSleepPicker, setShowSleepPicker] = useState(false);
   const [isPip, setIsPip] = useState(false);
-  const BROADCAST_MESSAGES = [
-    '🇲🇱 Support Mali & the AES Alliance — Unity is Strength!',
-    '📺 Enjoying IBK TV? Share it with friends and family!',
-    '🌍 IBK TV — Free African & World TV, always live!',
-  ];
+  const [qualityLabel, setQualityLabel] = useState('');
   const [showBroadcast, setShowBroadcast] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState(0);
+  const [copied, setCopied] = useState(false);
   const broadcastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const broadcastIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const broadcastMsgIndexRef = useRef(0);
@@ -85,7 +97,19 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     usingBackupRef.current = false;
     hasStartedRef.current = false;
     setIsPaused(false);
+    prevStatusRef.current = 'loading';
   }, [channel]);
+
+  // Show "Stream recovered" toast when status transitions error → playing
+  useEffect(() => {
+    if (prevStatusRef.current === 'error' && status === 'playing') {
+      setShowRecovered(true);
+      const t = setTimeout(() => setShowRecovered(false), 3000);
+      prevStatusRef.current = status;
+      return () => clearTimeout(t);
+    }
+    prevStatusRef.current = status;
+  }, [status]);
 
   // Show the top bar and restart the 4-second hide timer
   const bumpBar = useCallback(() => {
@@ -118,6 +142,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
     if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
     const video = videoRef.current;
     video.src = '';
+    video.load();
     video.volume = volume;
     video.muted = muted;
     lastTimeRef.current = 0;
@@ -167,12 +192,12 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         maxStarvationDelay:  2,
         maxLoadingDelay:     2,
 
-        // ── ABR ───────────────────────────────────────────────────────────
-        abrEwmaDefaultEstimate: 2_000_000,
+        // ── ABR — start conservative, upgrade fast ────────────────────────
+        abrEwmaDefaultEstimate: 1_000_000,
         abrEwmaFastLive:        2,
         abrEwmaSlowLive:        6,
-        abrBandWidthFactor:     0.90,
-        abrBandWidthUpFactor:   0.80,
+        abrBandWidthFactor:     0.85,
+        abrBandWidthUpFactor:   0.75,
       });
       hlsRef.current = hls;
       hls.loadSource(src);
@@ -184,6 +209,12 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           hasStartedRef.current = true;
         }).catch(() => {});
         setStatus('playing');
+      });
+
+      hls.on(Hls.Events.LEVEL_SWITCHED, (_, data) => {
+        const level = hls.levels[data.level];
+        if (level?.height) setQualityLabel(`${level.height}p`);
+        else setQualityLabel('');
       });
 
       hls.on(Hls.Events.ERROR, (_, data) => {
@@ -242,7 +273,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
       setStatus('error');
       setErrMsg('HLS not supported in this browser');
     }
-  }, [channel, retryKey, isIOS, enterIOSFullscreen]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [channel, retryKey, enterIOSFullscreen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     startStream();
@@ -316,6 +347,15 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
       v.removeEventListener('leavepictureinpicture', onLeave);
     };
   }, []);
+
+  const shareChannel = useCallback(() => {
+    if (!channel) return;
+    const url = `${window.location.origin}${window.location.pathname}?ch=${encodeURIComponent(channel.id)}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }).catch(() => {});
+  }, [channel]);
 
   const togglePip = useCallback(async () => {
     const v = videoRef.current;
@@ -392,10 +432,12 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           break;
         case 'ArrowUp':
           e.preventDefault();
+          setVolume((v) => { const next = Math.min(1, Math.round((v + 0.1) * 10) / 10); setMuted(false); return next; });
           bumpBar();
           break;
         case 'ArrowDown':
           e.preventDefault();
+          setVolume((v) => Math.max(0, Math.round((v - 0.1) * 10) / 10));
           bumpBar();
           break;
         case 'Enter':
@@ -412,14 +454,37 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
 
   if (!channel) return null;
 
+  // YouTube embed — render iframe instead of HLS video
+  if (channel.youtubeChannelId) {
+    const ytSrc = `https://www.youtube.com/embed/live_stream?channel=${channel.youtubeChannelId}&autoplay=1&rel=0&modestbranding=1`;
+    return (
+      <div ref={playerRef} className="fs-player" onClick={bumpBar}>
+        <div className={`fs-topbar fs-topbar--visible`}>
+          <button tabIndex={0} className="fs-back" onClick={(e) => { e.stopPropagation(); onClose(); }}>‹ Back</button>
+          {hasPrev && <button tabIndex={0} className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onPrev?.(); }}>⏮</button>}
+          {hasNext && <button tabIndex={0} className="fs-nav-btn" onClick={(e) => { e.stopPropagation(); onNext?.(); }}>⏭</button>}
+          <img src={channel.logo} alt={channel.name} className="fs-ch-logo" onError={(e) => (e.currentTarget.style.display = 'none')} />
+          <div className="fs-ch-info">
+            <div className="fs-ch-name">{channel.name}</div>
+            <div className="fs-ch-sub">{channel.country} · {channel.language}</div>
+          </div>
+          <div className="fs-live-badge">● LIVE</div>
+          <div className="fs-brand"><span className="wm-ibk">IBK</span><span className="wm-tv">TV</span></div>
+        </div>
+        <iframe
+          src={ytSrc}
+          className="fs-video"
+          style={{ border: 'none', width: '100%', height: '100%' }}
+          allow="autoplay; fullscreen; encrypted-media"
+          allowFullScreen
+          title={channel.name}
+        />
+      </div>
+    );
+  }
+
   // Only force the topbar visible on error (retry/back buttons must be reachable).
   const alwaysShow = status === 'error';
-
-  const formatSleep = (secs: number) => {
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    return `${m}:${String(s).padStart(2, '0')}`;
-  };
 
   return (
     <div ref={playerRef} className="fs-player" onMouseMove={bumpBar} onClick={bumpBar} onTouchStart={bumpBar}>
@@ -457,6 +522,7 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           <div className="fs-ch-sub">{channel.country} · {channel.language}</div>
         </div>
         <div className="fs-live-badge">● LIVE</div>
+        {qualityLabel && <div className="fs-quality-badge">{qualityLabel}</div>}
 
         {/* Sleep timer */}
         <div className="fs-sleep-wrap" onClick={(e) => e.stopPropagation()}>
@@ -516,8 +582,9 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
             e.stopPropagation();
             if (!reported && channel) {
               try {
-                const broken: string[] = JSON.parse(localStorage.getItem('ibktv-broken') || '[]');
-                if (!broken.includes(channel.id)) broken.push(channel.id);
+                const raw = JSON.parse(localStorage.getItem('ibktv-broken') || '{}');
+                const broken: Record<string, number> = typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+                broken[channel.id] = Date.now();
                 localStorage.setItem('ibktv-broken', JSON.stringify(broken));
               } catch { /* ignore */ }
               setReported(true);
@@ -528,6 +595,11 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
           {reported ? '✓ Reported' : '⚑ Broken?'}
         </button>
 
+        {/* Share */}
+        <button className="fs-share-btn" onClick={(e) => { e.stopPropagation(); shareChannel(); }} title="Copy link to this channel">
+          {copied ? '✓' : '⎘'}
+        </button>
+
         {/* Fullscreen */}
         <button className="fs-fullscreen-btn" onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }} aria-label="Toggle fullscreen (F)">
           {isFs ? '⤡' : '⤢'}
@@ -536,10 +608,16 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         <div className="fs-brand"><span className="wm-ibk">IBK</span><span className="wm-tv">TV</span></div>
       </div>
 
+      {/* Copied toast */}
+      {copied && (
+        <div className="recovered-toast" style={{ background: 'rgba(30,100,220,0.92)' }}>⎘ Link copied!</div>
+      )}
+
       {/* Broadcast message banner */}
       {showBroadcast && (
         <div className="broadcast-banner">
           {BROADCAST_MESSAGES[broadcastMsg]}
+          <button className="broadcast-dismiss" onClick={(e) => { e.stopPropagation(); setShowBroadcast(false); }} aria-label="Dismiss">✕</button>
         </div>
       )}
 
@@ -571,6 +649,11 @@ export default function Player({ channel, onClose, onPrev, onNext, hasPrev, hasN
         <div className="fs-rebuf">
           <div className="spinner spinner--sm" />
         </div>
+      )}
+
+      {/* Stream recovered toast */}
+      {showRecovered && (
+        <div className="recovered-toast">✓ Stream recovered</div>
       )}
 
       {/* Error */}

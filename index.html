@@ -10,21 +10,33 @@
     <meta name="theme-color" content="#e5091a" />
     <!-- Auto-accept terms so modal never shows regardless of cached JS version -->
     <script>try{localStorage.setItem('ibktv-terms-accepted','1')}catch(e){}</script>
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="IBK-TV" />
     <title>IBK-TV · Live Television</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- DNS pre-resolution for known stream CDNs -->
-    <link rel="dns-prefetch" href="//stream.bozztv.com">
+    <!-- Preconnect to proxy + key CDNs — shaves 100-300ms off first stream load -->
+    <link rel="preconnect" href="https://dbamtwsny4dce.cloudfront.net" crossorigin>
+    <link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
+    <!-- DNS pre-resolution for stream CDNs -->
+    <link rel="dns-prefetch" href="//ddrxza9b448oa.cloudfront.net">
     <link rel="dns-prefetch" href="//akamaized.net">
     <link rel="dns-prefetch" href="//amagi.tv">
-    <link rel="dns-prefetch" href="//cloudfront.net">
-    <link rel="dns-prefetch" href="//upload.wikimedia.org">
-    <link rel="preconnect" href="//upload.wikimedia.org" crossorigin>
+    <link rel="dns-prefetch" href="//stream.bozztv.com">
+    <link rel="dns-prefetch" href="//live.france24.com">
+    <link rel="dns-prefetch" href="//dwamdstream102.akamaized.net">
+
+    <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-5380775611352726">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5380775611352726"
+     crossorigin="anonymous"></script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body style="background:#06060a;margin:0;">
+    <div id="root" style="background:#06060a;"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

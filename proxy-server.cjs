@@ -26,11 +26,11 @@ const httpsAgent = new https.Agent({
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. LRU SEGMENT CACHE
 //    TS segments are immutable — once fetched, serve instantly from RAM.
-//    200 slots × ~500 KB avg = ~100 MB, stays within Railway free tier limits.
+//    200 slots × ~500 KB avg = ~100 MB RAM max.
 // ─────────────────────────────────────────────────────────────────────────────
-const LRU_MAX = 30;
+const LRU_MAX = 60;
 const SEG_TTL = 60_000; // 60 s
-const SEG_MAX_BYTES = 1.5 * 1024 * 1024; // skip caching segments > 1.5 MB
+const SEG_MAX_BYTES = 2 * 1024 * 1024; // skip caching segments > 2 MB
 
 class LRUCache {
   constructor(max) {
@@ -87,7 +87,7 @@ function rateLimit(req, res, next) {
     rateMap.set(ip, entry);
   }
   entry.count++;
-  if (entry.count > 120) return res.status(429).send('Too Many Requests');
+  if (entry.count > 300) return res.status(429).send('Too Many Requests');
   next();
 }
 

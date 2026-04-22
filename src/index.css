@@ -1,28 +1,100 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:      #08080c;
-  --bg2:     #111116;
-  --bg3:     #1a1a22;
-  --bg4:     #222230;
-  --accent:  #e50914;
+  --bg:      #06060a;
+  --bg2:     #0e0e16;
+  --bg3:     #141422;
+  --bg4:     #1a1a2a;
+  --accent:  #e5091a;
   --accent-dim: rgba(229,9,20,0.18);
-  --text:    #f2f2f2;
-  --text2:   #8888a0;
-  --text3:   #555568;
-  --border:  #25253a;
-  --radius:  14px;
+  --gold:    #FFD700;
+  --gold-dim: rgba(255,215,0,0.15);
+  --text:    #f0f0f5;
+  --text2:   #7878a0;
+  --text3:   #404060;
+  --border:  #1c1c2c;
+  --radius:  16px;
 }
 
 html, body, #root {
   width: 100%;
   min-height: 100%;
-  background: var(--bg);
+  background: radial-gradient(ellipse at top, #0d0d1a 0%, #06060a 70%);
   color: var(--text);
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
   font-size: 15px;
   overflow-x: hidden;
 }
 
 button { font-family: inherit; cursor: pointer; border: none; outline: none; }
-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; box-shadow: 0 0 0 6px rgba(229,9,20,0.2); }
+input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 6px rgba(229,9,20,0.15); }
+a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ── Broadcast message banner ─────────────────────────────── */
+.broadcast-banner {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(10,10,22,0.96) 0%, rgba(22,16,0,0.96) 100%);
+  color: #FFD700;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-family: 'Poppins', sans-serif;
+  padding: 18px 44px 18px 36px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,215,0,0.45);
+  box-shadow: 0 0 48px rgba(255,215,0,0.18), 0 8px 32px rgba(0,0,0,0.7);
+  text-shadow: 0 0 20px rgba(255,215,0,0.5);
+  text-align: center;
+  z-index: 120;
+  pointer-events: auto;
+  backdrop-filter: blur(16px);
+  max-width: calc(100vw - 32px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.03em;
+  animation: broadcast-in 20s ease forwards;
+}
+.recovered-toast {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 200, 80, 0.92);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 24px;
+  z-index: 130;
+  pointer-events: none;
+  animation: fade-in-out 3s ease forwards;
+}
+@keyframes fade-in-out {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  15%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.broadcast-dismiss {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: rgba(255,215,0,0.7);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+}
+.broadcast-dismiss:hover { color: #FFD700; }
+@keyframes broadcast-in {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.96); }
+  10%  { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  80%  { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.97); }
+}

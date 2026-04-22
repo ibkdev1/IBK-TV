@@ -623,6 +623,15 @@ export const channels: Channel[] = [
   //  🇫🇷  FRANCE
   // ══════════════════════════════════════════════
   {
+    id: 'tf1',
+    name: 'TF1',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/sixty/TF1_logo_2013.svg/120px-TF1_logo_2013.svg.png',
+    streamUrl: 'https://hls.tf1.fr/hls/live/2037221/tf1/index.m3u8',
+    category: 'France',
+    country: 'France',
+    language: 'French',
+  },
+  {
     id: 'france2',
     name: 'France 2',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/France_2_logo_2008.svg/120px-France_2_logo_2008.svg.png',

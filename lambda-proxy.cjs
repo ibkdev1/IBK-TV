@@ -7,44 +7,6 @@ const { URL } = require('url');
 const httpAgent  = new http.Agent ({ keepAlive: true, maxSockets: 12, maxFreeSockets: 4, timeout: 12000 });
 const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 12, maxFreeSockets: 4, timeout: 12000 });
 
-// ── French proxy — set FRENCH_PROXY_URL env var to unlock geo-restricted FR channels
-//    HTTP proxy:  http://user:pass@ip:port
-//    SOCKS5:      socks5://user:pass@ip:port
-const FRENCH_PROXY_URL = process.env.FRENCH_PROXY_URL || null;
-const FRENCH_DOMAINS   = [
-  'tf1.fr', 'hls.tf1.fr', 'stream-live.tf1.fr',
-  'm6.fr',  'hls.m6.fr',
-  'arte.tv',
-  'france.tv', 'hls.francetv.fr',
-];
-
-let frenchHttpAgent  = null;
-let frenchHttpsAgent = null;
-if (FRENCH_PROXY_URL) {
-  try {
-    const isSocks = FRENCH_PROXY_URL.startsWith('socks');
-    if (isSocks) {
-      const { SocksProxyAgent } = require('socks-proxy-agent');
-      frenchHttpAgent  = new SocksProxyAgent(FRENCH_PROXY_URL);
-      frenchHttpsAgent = new SocksProxyAgent(FRENCH_PROXY_URL);
-    } else {
-      const { HttpsProxyAgent } = require('https-proxy-agent');
-      frenchHttpAgent  = new HttpsProxyAgent(FRENCH_PROXY_URL);
-      frenchHttpsAgent = new HttpsProxyAgent(FRENCH_PROXY_URL);
-    }
-    console.log('🇫🇷 French proxy active');
-  } catch (e) {
-    console.error('[french-proxy] init failed:', e.message);
-  }
-}
-
-function needsFrenchProxy(url) {
-  if (!FRENCH_PROXY_URL) return false;
-  try {
-    const h = new URL(url).hostname;
-    return FRENCH_DOMAINS.some(d => h === d || h.endsWith('.' + d));
-  } catch { return false; }
-}
 
 // ── LRU Segment Cache ─────────────────────────────────────────────────────────
 const LRU_MAX       = 60;
@@ -99,9 +61,7 @@ function rawFetch(targetUrl, extraHeaders = {}) {
       hostname: parsed.hostname,
       port:     parsed.port || (isHttps ? 443 : 80),
       path:     parsed.pathname + parsed.search,
-      agent:    needsFrenchProxy(targetUrl)
-                  ? (isHttps ? frenchHttpsAgent : frenchHttpAgent)
-                  : (isHttps ? httpsAgent : httpAgent),
+      agent:    isHttps ? httpsAgent : httpAgent,
       headers: {
         'User-Agent':      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept':          '*/*',

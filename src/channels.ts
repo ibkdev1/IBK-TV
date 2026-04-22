@@ -39,14 +39,6 @@ const DIRECT_DOMAINS = [
   'infomaniak.com',
 ];
 
-// Domains requiring a French IP — routed through Paris Lambda via /stream-fr
-const FRENCH_DOMAINS = [
-  'tf1.fr', 'hls.tf1.fr', 'stream-live.tf1.fr',
-  'm6.fr',  'hls.m6.fr',
-  'arte.tv',
-  'france.tv', 'hls.francetv.fr',
-];
-
 export function proxyUrl(rawUrl: string, referer?: string, direct?: boolean): string {
   if (referer) {
     return `/stream?url=${encodeURIComponent(rawUrl)}&referer=${encodeURIComponent(referer)}`;
@@ -54,9 +46,6 @@ export function proxyUrl(rawUrl: string, referer?: string, direct?: boolean): st
   if (direct) return rawUrl;
   try {
     const hostname = new URL(rawUrl).hostname;
-    if (FRENCH_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d))) {
-      return `/stream-fr?url=${encodeURIComponent(rawUrl)}`;
-    }
     if (DIRECT_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d))) {
       return rawUrl;
     }
@@ -628,15 +617,6 @@ export const channels: Channel[] = [
   // ══════════════════════════════════════════════
   //  🇫🇷  FRANCE
   // ══════════════════════════════════════════════
-  {
-    id: 'tf1',
-    name: 'TF1',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Logo_TF1_2013.svg/120px-Logo_TF1_2013.svg.png',
-    streamUrl: 'https://hls.tf1.fr/hls/live/2037221/tf1/index.m3u8',
-    category: 'France',
-    country: 'France',
-    language: 'French',
-  },
   {
     id: 'france2',
     name: 'France 2',

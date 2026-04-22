@@ -9,45 +9,6 @@ const { URL } = require('url');
 const app  = express();
 const PORT = process.env.PORT || 3001;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FRENCH PROXY — set FRENCH_PROXY_URL env var to route geo-locked FR channels
-// Supports HTTP proxies:  http://user:pass@ip:port
-// Supports SOCKS5:        socks5://user:pass@ip:port
-// ─────────────────────────────────────────────────────────────────────────────
-const FRENCH_PROXY_URL = process.env.FRENCH_PROXY_URL || null;
-
-// Domains that require routing through the French proxy
-const FRENCH_DOMAINS = [
-  'tf1.fr', 'hls.tf1.fr', 'stream-live.tf1.fr',
-  'm6.fr', 'hls.m6.fr',
-  'arte.tv',
-  'france.tv', 'hls.francetv.fr',
-];
-
-let frenchHttpsAgent  = null;
-let frenchHttpAgent   = null;
-
-if (FRENCH_PROXY_URL) {
-  try {
-    const { HttpsProxyAgent } = require('https-proxy-agent');
-    const { SocksProxyAgent } = require('socks-proxy-agent');
-    const isSocks = FRENCH_PROXY_URL.startsWith('socks');
-    const AgentClass = isSocks ? SocksProxyAgent : HttpsProxyAgent;
-    frenchHttpsAgent = new AgentClass(FRENCH_PROXY_URL);
-    frenchHttpAgent  = new AgentClass(FRENCH_PROXY_URL);
-    console.log(`🇫🇷  French proxy active: ${FRENCH_PROXY_URL.replace(/:[^@]+@/, ':***@')}`);
-  } catch (e) {
-    console.error('[french-proxy] Failed to init proxy agent:', e.message);
-  }
-}
-
-function needsFrenchProxy(url) {
-  if (!FRENCH_PROXY_URL || (!frenchHttpsAgent && !frenchHttpAgent)) return false;
-  try {
-    const hostname = new URL(url).hostname;
-    return FRENCH_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d));
-  } catch { return false; }
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 1. KEEP-ALIVE CONNECTION POOLS
@@ -166,9 +127,7 @@ function rawFetch(targetUrl, extraHeaders = {}) {
       hostname: parsed.hostname,
       port:     parsed.port || (isHttps ? 443 : 80),
       path:     parsed.pathname + parsed.search,
-      agent:    needsFrenchProxy(targetUrl)
-                  ? (isHttps ? frenchHttpsAgent : frenchHttpAgent)
-                  : (isHttps ? httpsAgent : httpAgent),
+      agent:    isHttps ? httpsAgent : httpAgent,
       headers: {
         'User-Agent':      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept':          '*/*',
